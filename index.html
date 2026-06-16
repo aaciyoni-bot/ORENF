@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -31,7 +32,7 @@
         body { background-color: #f8fafc; font-family: 'Heebo', sans-serif; overflow-x: hidden; }
         
         /* Smooth scrolling */
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
 
         /* Hide elements initially - FIX: Added !important and pointer-events to prevent invisible overlays blocking clicks */
         .hidden-section { display: none !important; opacity: 0; pointer-events: none; transition: opacity 0.5s ease-in-out; }
@@ -71,6 +72,14 @@
         /* Loader */
         .loader { border: 3px solid #f3f3f3; border-top: 3px solid #d97706; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; display: none;}
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Custom Radio Toggles for Forms */
+        .audit-radio:checked + div {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+            color: #1d4ed8;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body class="text-brand-dark antialiased">
@@ -94,7 +103,8 @@
                 <div class="hidden md:flex gap-8 font-semibold text-sm">
                     <a href="#expertise" class="hover:text-brand-gold transition-colors">תחומי מומחיות</a>
                     <a href="#technology" class="hover:text-brand-gold transition-colors">המערכת שלנו</a>
-                    <a href="#clients" class="hover:text-brand-gold transition-colors">לקוחות</a>
+                    <a href="#articles" class="hover:text-brand-gold transition-colors">מאמרים מקצועיים</a>
+                    <a href="#clients" class="hover:text-brand-gold transition-colors">לקוחות ושותפים</a>
                 </div>
 
                 <div>
@@ -221,6 +231,76 @@
                         </div>
                         <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-brand-gold/20 rounded-full blur-2xl -z-10"></div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Professional Articles Section -->
+        <section id="articles" class="py-24 bg-white">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <div class="flex justify-between items-end mb-12">
+                    <div>
+                        <h3 class="text-brand-gold font-bold tracking-wider uppercase text-sm mb-2">ספריית ידע רגולטורי</h3>
+                        <h2 class="text-3xl font-black text-brand-dark">מאמרים מקצועיים מאת אורן פראג'</h2>
+                    </div>
+                    <button class="hidden md:block bg-gray-100 hover:bg-gray-200 text-brand-dark px-6 py-2 rounded-lg font-bold text-sm transition-colors">
+                        לכל המאמרים <i class="fa-solid fa-arrow-left ml-2"></i>
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Article 1 -->
+                    <div class="rounded-xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-xl transition-shadow bg-white">
+                        <img src="https://images.unsplash.com/photo-1541888086425-d81bb19240f5?q=80&w=2070&auto=format&fit=crop" alt="Construction Safety" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <span class="text-xs font-bold text-brand-gold bg-yellow-50 px-2 py-1 rounded mb-3 inline-block">ניהול בטיחות</span>
+                            <h3 class="font-bold text-lg mb-2 line-clamp-2">חוק שעות עבודה ומנוחה: הקנסות החדשים ואיך להימנע מהם באתר הבנייה</h3>
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                                תשישות היא הגורם מספר אחד לתאונות עבודה קטלניות. מדריך חובה למנהלי פרויקטים על אכיפת שעות, תיעוד נכון, והגנה משפטית מפני ביקורות פתע של משרד העבודה.
+                            </p>
+                            <a href="#" class="text-brand-accent font-bold text-sm hover:text-blue-800">קרא עוד <i class="fa-solid fa-arrow-left text-xs ml-1"></i></a>
+                        </div>
+                    </div>
+                    <!-- Article 2 -->
+                    <div class="rounded-xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-xl transition-shadow bg-white">
+                        <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2070&auto=format&fit=crop" alt="Subcontractors" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <span class="text-xs font-bold text-brand-gold bg-yellow-50 px-2 py-1 rounded mb-3 inline-block">רגולציה ומשפט</span>
+                            <h3 class="font-bold text-lg mb-2 line-clamp-2">ניהול קבלני משנה - אחריות וחשיפה של הקבלן הראשי</h3>
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                                האם אתם מוגנים כראוי כאשר קבלן משנה נכנס לאתר שלכם? סקירה משפטית על חובת קליטת קבלן, הדרכות בטיחות מתועדות, ווידוא רישיונות בתוקף.
+                            </p>
+                            <a href="#" class="text-brand-accent font-bold text-sm hover:text-blue-800">קרא עוד <i class="fa-solid fa-arrow-left text-xs ml-1"></i></a>
+                        </div>
+                    </div>
+                    <!-- Article 3 -->
+                    <div class="rounded-xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-xl transition-shadow bg-white">
+                        <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2084&auto=format&fit=crop" alt="Management" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <span class="text-xs font-bold text-brand-gold bg-yellow-50 px-2 py-1 rounded mb-3 inline-block">ייעוץ אסטרטגי</span>
+                            <h3 class="font-bold text-lg mb-2 line-clamp-2">כיצד תרבות "כמעט ונפגע" מצילה חיים וחוסכת מיליונים לארגון</h3>
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                                במקום להסתיר טעויות, ארגונים בריאים מתגמלים על דיווח אירועי בטיחות. למדו כיצד ליישם מודל CAPA בארגון שלכם בעזרת טכנולוגיה וייעוץ נכון.
+                            </p>
+                            <a href="#" class="text-brand-accent font-bold text-sm hover:text-blue-800">קרא עוד <i class="fa-solid fa-arrow-left text-xs ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Clients Section -->
+        <section id="clients" class="py-20 bg-gray-50 border-t border-gray-200">
+            <div class="container mx-auto px-6 max-w-7xl text-center">
+                <h3 class="text-brand-gold font-bold tracking-wider uppercase text-sm mb-2">אמון נבנה על מקצועיות</h3>
+                <h2 class="text-3xl font-black text-brand-dark mb-12">הארגונים שכבר בחרו בשקט נפשי</h2>
+                
+                <div class="flex flex-wrap justify-center items-center gap-10 md:gap-20 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+                    <!-- Client simulated logos -->
+                    <div class="flex items-center gap-2 font-black text-2xl"><i class="fa-solid fa-building text-brand-dark"></i> טופ הנגב בע"מ</div>
+                    <div class="flex items-center gap-2 font-black text-2xl"><i class="fa-solid fa-bridge-water text-brand-dark"></i> נתיבי תעבורה</div>
+                    <div class="flex items-center gap-2 font-black text-2xl"><i class="fa-solid fa-city text-brand-dark"></i> קבוצת גלובל-בניה</div>
+                    <div class="flex items-center gap-2 font-black text-2xl"><i class="fa-solid fa-shield text-brand-dark"></i> מוקד אבטחה ארצי</div>
                 </div>
             </div>
         </section>
@@ -461,7 +541,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                         
                         <!-- Form 1 -->
-                        <div onclick="simulateFormOpen('מבדק בטיחות שוטף (יומי)')" class="bg-white border border-gray-200 rounded-xl p-5 form-card relative">
+                        <div onclick="openForm('מבדק בטיחות שוטף (יומי)')" class="bg-white border border-gray-200 rounded-xl p-5 form-card relative">
                             <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded flex items-center justify-center text-lg mb-3"><i class="fa-solid fa-person-digging"></i></div>
                             <h3 class="font-bold text-brand-dark mb-1 text-sm">1. מבדק בטיחות שוטף</h3>
                             <p class="text-xs text-gray-500 mb-3 line-clamp-2">צ'קליסט יומי מקיף למנהל עבודה. ציוד מגן, גידור, פיגומים, סדר וניקיון.</p>
@@ -469,7 +549,7 @@
                         </div>
 
                         <!-- Form 2 -->
-                        <div onclick="simulateFormOpen('דיווח וחקר כמעט ונפגע')" class="bg-white border border-gray-200 rounded-xl p-5 form-card relative border-l-4 border-l-red-500">
+                        <div onclick="openForm('דיווח וחקר כמעט ונפגע')" class="bg-white border border-gray-200 rounded-xl p-5 form-card relative border-l-4 border-l-red-500">
                             <div class="w-10 h-10 bg-red-50 text-red-600 rounded flex items-center justify-center text-lg mb-3"><i class="fa-solid fa-triangle-exclamation"></i></div>
                             <h3 class="font-bold text-brand-dark mb-1 text-sm">2. דיווח "כמעט ונפגע"</h3>
                             <p class="text-xs text-gray-500 mb-3 line-clamp-2">טופס מהיר לתרבות בטיחות מונעת. דיווח מהשטח + הוספת תמונות למניעת אסון.</p>
@@ -533,13 +613,146 @@
                         </div>
 
                         <!-- Form 10 -->
-                        <div onclick="simulateFormOpen('סקר סיכונים מקדים JSA')" class="bg-white border border-gray-200 rounded-xl p-5 form-card relative">
+                        <div onclick="openForm('סקר סיכונים מקדים JSA')" class="bg-white border border-gray-200 rounded-xl p-5 form-card relative">
                             <div class="w-10 h-10 bg-sky-50 text-sky-600 rounded flex items-center justify-center text-lg mb-3"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
                             <h3 class="font-bold text-brand-dark mb-1 text-sm">10. סקר סיכונים (JSA)</h3>
                             <p class="text-xs text-gray-500 mb-3 line-clamp-2">ניתוח שלבי משימה חדשה, זיהוי סיכונים ואמצעי בקרה נדרשים לפני ביצוע.</p>
                             <span class="text-brand-gold font-bold text-xs flex items-center gap-1">פתח למילוי <i class="fa-solid fa-chevron-left text-[0.6rem]"></i></span>
                         </div>
 
+                    </div>
+                </div>
+
+                <!-- VIEW 3: ACTIVE FORM (The actual filling interface) -->
+                <div id="view-active-form" class="hidden-section pb-20">
+                    <button onclick="switchTab(event, 'forms')" class="flex items-center text-gray-500 hover:text-brand-dark font-bold mb-6 transition-colors">
+                        <i class="fa-solid fa-arrow-right ml-2"></i> חזור לספריית הטפסים
+                    </button>
+
+                    <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden max-w-4xl mx-auto">
+                        <div class="bg-brand-dark p-6 text-white flex justify-between items-center border-b-4 border-brand-gold">
+                            <div>
+                                <h2 id="active-form-title" class="text-2xl font-black">מבדק בטיחות שוטף (יומי)</h2>
+                                <p class="text-gray-300 text-sm mt-1">מערכת דיווח דיגיטלית - בהתאם לנהלי המוסד לבטיחות וגיהות</p>
+                            </div>
+                            <i class="fa-solid fa-clipboard-check text-4xl text-white/20"></i>
+                        </div>
+
+                        <form id="audit-form" onsubmit="submitForm(event)" class="p-8">
+                            <!-- Form Header Info -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 pb-8 border-b border-gray-100">
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700 mb-2">אתר/פרויקט מבוקר <span class="text-red-500">*</span></label>
+                                    <select required class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-brand-accent focus:ring-1 focus:ring-brand-accent outline-none">
+                                        <option value="" disabled selected>בחר אתר מהרשימה...</option>
+                                        <option value="1">פיתוח שכונת רקפות - באר שבע</option>
+                                        <option value="2">סלילת כביש עוקף - נתיבי ישראל</option>
+                                        <option value="3">מאגר מים - רשות ניקוז ערבה</option>
+                                        <option value="4">מפעל ייצור - אזור תעשייה עמק שרה</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700 mb-2">שם עורך הביקורת</label>
+                                    <input type="text" value="ישראל ישראלי (מנהל עבודה)" readonly class="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-gray-50 text-gray-500 outline-none">
+                                </div>
+                            </div>
+
+                            <!-- Audit Checklist -->
+                            <h3 class="font-bold text-lg mb-4 text-brand-dark border-r-4 border-brand-gold pr-3">סעיפי הביקורת בשטח</h3>
+                            
+                            <div class="space-y-4 mb-8">
+                                <!-- Question 1 -->
+                                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div class="flex items-start gap-3 md:w-2/3">
+                                        <i class="fa-solid fa-hard-hat text-brand-gold mt-1"></i>
+                                        <div>
+                                            <h4 class="font-bold text-brand-dark text-sm">ציוד מגן אישי (צמ"א)</h4>
+                                            <p class="text-xs text-gray-500">האם כל העובדים ללא יוצא מן הכלל לובשים קסדות רכוסות, אפודים זוהרים ונעלי בטיחות?</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <label class="cursor-pointer text-center">
+                                            <input type="radio" name="q1" value="yes" class="hidden audit-radio" required>
+                                            <div class="px-4 py-2 border border-gray-300 rounded text-sm bg-white transition-colors">תקין</div>
+                                        </label>
+                                        <label class="cursor-pointer text-center">
+                                            <input type="radio" name="q1" value="no" class="hidden audit-radio">
+                                            <div class="px-4 py-2 border border-gray-300 rounded text-sm bg-white transition-colors">לקוי</div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Question 2 -->
+                                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div class="flex items-start gap-3 md:w-2/3">
+                                        <i class="fa-solid fa-trowel-bricks text-brand-gold mt-1"></i>
+                                        <div>
+                                            <h4 class="font-bold text-brand-dark text-sm">גידור חפירות ואזורי סכנה</h4>
+                                            <p class="text-xs text-gray-500">האם הותקן גידור קשיח ותקני (ולא רק סרט סימון) סביב כל בורות החפירה?</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <label class="cursor-pointer text-center">
+                                            <input type="radio" name="q2" value="yes" class="hidden audit-radio" required>
+                                            <div class="px-4 py-2 border border-gray-300 rounded text-sm bg-white transition-colors">תקין</div>
+                                        </label>
+                                        <label class="cursor-pointer text-center">
+                                            <input type="radio" name="q2" value="no" class="hidden audit-radio">
+                                            <div class="px-4 py-2 border border-gray-300 rounded text-sm bg-white transition-colors">לקוי</div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Question 3 -->
+                                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div class="flex items-start gap-3 md:w-2/3">
+                                        <i class="fa-solid fa-truck-monster text-brand-gold mt-1"></i>
+                                        <div>
+                                            <h4 class="font-bold text-brand-dark text-sm">רישוי וכלים כבדים (צמ"ה)</h4>
+                                            <p class="text-xs text-gray-500">האם נבדק כי מפעילי הכלים כיום מחזיקים רישיון מתאים וכלים עברו בדיקת בוקר?</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <label class="cursor-pointer text-center">
+                                            <input type="radio" name="q3" value="yes" class="hidden audit-radio" required>
+                                            <div class="px-4 py-2 border border-gray-300 rounded text-sm bg-white transition-colors">תקין</div>
+                                        </label>
+                                        <label class="cursor-pointer text-center">
+                                            <input type="radio" name="q3" value="no" class="hidden audit-radio">
+                                            <div class="px-4 py-2 border border-gray-300 rounded text-sm bg-white transition-colors">לקוי</div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Upload & Notes -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700 mb-2">תמונות מהשטח / תיעוד ליקויים</label>
+                                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center text-center bg-gray-50 hover:bg-gray-100 cursor-pointer transition-colors">
+                                        <i class="fa-solid fa-cloud-arrow-up text-3xl text-brand-accent mb-2"></i>
+                                        <span class="text-sm font-bold text-brand-dark">לחץ להעלאת תמונות</span>
+                                        <span class="text-xs text-gray-500 mt-1">ממצלמת המכשיר או מהגלריה</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700 mb-2">הערות ביקורת / דרישות לתיקון</label>
+                                    <textarea rows="4" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-brand-accent focus:ring-1 focus:ring-brand-accent outline-none resize-none" placeholder="פרט כאן ליקויים, פעולות שבוצעו במקום ודגשים להמשך..."></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Submission -->
+                            <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg mb-8 flex items-start gap-3">
+                                <i class="fa-solid fa-triangle-exclamation text-brand-gold mt-0.5"></i>
+                                <div class="text-sm text-yellow-800">
+                                    <strong>שים לב:</strong> שליחת טופס זה מהווה חתימה אלקטרונית ומאשרת כי הביקורת בוצעה בשטח. אירועים חריגים ידווחו אוטומטית לקב"ט ולמנהל הפרויקט.
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full bg-brand-dark hover:bg-gray-800 text-white font-bold text-lg py-4 rounded-xl shadow-lg transition-all flex justify-center items-center gap-3">
+                                חתום ושלח ביקורת לשרת <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
 
@@ -577,9 +790,39 @@
             }, 3500);
         }
 
-        // Form simulation
-        function simulateFormOpen(formName) {
-            showCustomToast('פותח טופס', `טוען תבנית: ${formName}... (סימולציה)`);
+        // Open actual form interface
+        function openForm(formName) {
+            // Change title
+            document.getElementById('active-form-title').innerText = formName;
+            
+            // Switch view
+            document.getElementById('view-forms').classList.replace('visible-section', 'hidden-section');
+            document.getElementById('view-forms').style.display = 'none';
+            
+            const activeForm = document.getElementById('view-active-form');
+            activeForm.style.display = 'block';
+            activeForm.classList.replace('hidden-section', 'visible-section');
+            
+            // Scroll to top of the scrollable area
+            activeForm.parentElement.scrollTop = 0;
+            
+            showCustomToast('טופס נפתח למילוי', `מעלה את ${formName} לתצוגה`);
+        }
+
+        // Submit form handler
+        function submitForm(e) {
+            e.preventDefault();
+            
+            // Show toast
+            showCustomToast('הביקורת נשמרה בהצלחה!', 'הנתונים קודדו ונשמרו בשרת באופן מאובטח. העתק נשלח למנהל העבודה.');
+            
+            // Reset form
+            document.getElementById('audit-form').reset();
+            
+            // Return to forms library
+            setTimeout(() => {
+                switchTab(null, 'forms');
+            }, 1500);
         }
 
         // Login UI Handling
@@ -658,13 +901,15 @@
             // Hide all views
             document.getElementById('view-dashboard').classList.replace('visible-section', 'hidden-section');
             document.getElementById('view-forms').classList.replace('visible-section', 'hidden-section');
+            document.getElementById('view-active-form').classList.replace('visible-section', 'hidden-section');
             
             // Immediate change for simplicity
             document.getElementById('view-dashboard').style.display = tabId === 'dashboard' ? 'block' : 'none';
             document.getElementById('view-forms').style.display = tabId === 'forms' ? 'block' : 'none';
+            document.getElementById('view-active-form').style.display = 'none'; // Only opened via openForm()
             
             const activeView = document.getElementById('view-' + tabId);
-            activeView.classList.replace('hidden-section', 'visible-section');
+            if(activeView) activeView.classList.replace('hidden-section', 'visible-section');
         }
 
         // Chart Rendering (Requires visibility)
