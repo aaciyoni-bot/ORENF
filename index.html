@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>פורטל כשירות ביטחונית | אורן פראג' - טופ הנגב</title>
+    <title>אורן פראג' - ייעוץ, ביקורת וניהול בטיחות</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,7 +15,7 @@
                 extend: {
                     fontFamily: { sans: ['Heebo', 'sans-serif'], },
                     colors: {
-                        brand: { navy: '#0f172a', orange: '#f97316', light: '#f8fafc', gray: '#64748b' },
+                        brand: { navy: '#0f172a', gold: '#d97706', light: '#f8fafc', gray: '#64748b' },
                         security: { red: '#dc2626', dark: '#111827' }
                     }
                 }
@@ -23,671 +24,752 @@
     </script>
 
     <style>
-        body { background-color: #f1f5f9; }
-        .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
-        .form-card { transition: all 0.3s ease; }
-        .form-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); border-color: #dc2626; }
+        body { background-color: #f8fafc; overflow-x: hidden; scroll-behavior: smooth;}
         
-        /* Login Screen Overlay */
-        #login-overlay { position: fixed; inset: 0; background: linear-gradient(rgba(15,23,42,0.95), rgba(15,23,42,0.95)), url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop'); background-size: cover; z-index: 100; display: flex; align-items: center; justify-content: center; transition: opacity 0.5s ease;}
+        /* View Management */
+        .view-section { display: none; opacity: 0; transition: opacity 0.5s ease; }
+        .view-section.active { display: block; opacity: 1; }
+
+        /* Portal UI */
+        .portal-layout { display: flex; height: 100vh; overflow: hidden; background-color: #f1f5f9;}
+        .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .form-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); border-color: #d97706; }
         
-        /* Custom Signature Font Simulation */
-        .signature-font { font-family: 'Brush Script MT', 'Bradley Hand', cursive; font-style: italic; }
-        
-        /* Official Stamp Style */
+        /* Signature Canvas */
+        #signature-pad {
+            border: 2px dashed #cbd5e1;
+            border-radius: 0.5rem;
+            cursor: crosshair;
+            background-color: #f8fafc;
+            touch-action: none; /* Prevents scrolling while signing on mobile */
+        }
+
+        /* Camera Video */
+        #camera-stream {
+            width: 100%;
+            border-radius: 0.5rem;
+            background-color: #000;
+            object-fit: cover;
+        }
+
+        /* Official Stamp */
         .official-stamp {
-            border: 4px solid #dc2626;
-            color: #dc2626;
-            font-weight: black;
-            text-transform: uppercase;
-            border-radius: 5px;
-            padding: 10px 20px;
-            display: inline-block;
-            transform: rotate(-5deg);
-            opacity: 0.8;
-            font-size: 1.2rem;
-            letter-spacing: 1px;
-            box-shadow: 0 0 5px rgba(220, 38, 38, 0.3) inset;
+            border: 4px solid #dc2626; color: #dc2626; font-weight: black; text-transform: uppercase;
+            border-radius: 5px; padding: 10px 20px; display: inline-block; transform: rotate(-5deg);
+            opacity: 0.8; font-size: 1.2rem; letter-spacing: 1px; box-shadow: 0 0 5px rgba(220, 38, 38, 0.3) inset;
         }
 
         /* Print Media Query */
         @media print {
             body { background-color: white; }
-            aside, header, #toast-container, .no-print { display: none !important; }
-            main { padding: 0 !important; margin: 0 !important; overflow: visible !important; }
-            #view-print-certificate { display: block !important; box-shadow: none !important; border: none !important; }
+            .no-print, aside, header, #toast-container { display: none !important; }
+            .portal-layout { display: block; height: auto; overflow: visible; }
+            main { padding: 0 !important; margin: 0 !important; overflow: visible !important; height: auto !important;}
+            #view-portal-certificate { display: block !important; box-shadow: none !important; border: none !important; }
             .print-border { border: 2px solid #000 !important; }
         }
     </style>
 </head>
-<body class="font-sans text-brand-navy antialiased h-screen flex overflow-hidden">
+<body class="font-sans text-brand-navy antialiased">
 
-    <!-- LOGIN SCREEN -->
-    <div id="login-overlay">
-        <div class="bg-white p-10 rounded-2xl shadow-2xl max-w-md w-full mx-4 relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-2 bg-security-red"></div>
-            <div class="text-center mb-8">
-                <div class="flex items-center justify-center gap-3 mb-4">
-                    <div class="w-12 h-12 bg-security-dark rounded-lg flex items-center justify-center border border-gray-700">
-                        <i class="fa-solid fa-fingerprint text-security-red text-2xl"></i>
+    <!-- ==========================================
+         VIEW 1: PUBLIC LANDING PAGE (OREN FARAG)
+         ========================================== -->
+    <div id="view-landing" class="view-section active">
+        
+        <!-- Navbar -->
+        <nav class="bg-white shadow-sm sticky top-0 z-50 h-20 flex items-center">
+            <div class="container mx-auto px-6 flex justify-between items-center max-w-7xl">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-brand-navy rounded text-brand-gold flex items-center justify-center text-2xl font-black">OF</div>
+                    <div>
+                        <h1 class="font-black text-xl leading-tight">אורן פראג'</h1>
+                        <p class="text-xs text-gray-500 font-bold">ייעוץ, ביקורת וניהול משברים</p>
                     </div>
-                    <h1 class="font-black text-2xl text-brand-navy">פורטל ביטחון מלמ"ב</h1>
                 </div>
-                <p class="text-sm font-bold text-gray-500">טופ הנגב פרויקטים בשיתוף אורן פראג'</p>
-                <p class="text-xs text-security-red mt-2 font-bold bg-red-50 p-2 rounded">מערכת אכיפת "תוכנית שיפור ביטחונית"</p>
-            </div>
-            
-            <form id="login-form" class="space-y-5">
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1">קוד אישור ביטחוני (שם משתמש)</label>
-                    <input type="text" value="TOPH" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-security-red outline-none bg-gray-50 text-center font-bold tracking-widest uppercase">
+                
+                <div class="hidden md:flex gap-8 font-bold text-sm">
+                    <a href="#about" class="hover:text-brand-gold transition-colors">אודות</a>
+                    <a href="#services" class="hover:text-brand-gold transition-colors">תחומי התמחות</a>
+                    <a href="#tech" class="hover:text-brand-gold transition-colors">המערכת הטכנולוגית</a>
                 </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1">סיסמת מוצפנת</label>
-                    <input type="password" value="TOPHA" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-security-red outline-none bg-gray-50 text-center font-bold tracking-widest">
-                </div>
-                <button type="submit" class="w-full bg-security-dark hover:bg-black text-white font-bold py-3 rounded-lg transition-colors mt-4 shadow-lg border border-gray-700">
-                    התחבר למערכת המאובטחת <i class="fa-solid fa-lock ml-2"></i>
+
+                <button onclick="loginToPortal()" class="bg-brand-navy hover:bg-gray-800 text-white px-6 py-2 rounded-lg font-bold shadow-md transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-lock text-brand-gold"></i> כניסת לקוחות
                 </button>
-            </form>
-            <div class="text-center mt-6 text-xs text-gray-400 border-t pt-4">
-                מנוהל ומפוקח ע"י אורן פראג' - מנהל ביטחון
             </div>
+        </nav>
+
+        <section class="relative bg-brand-navy text-white py-32 overflow-hidden">
+            <div class="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1541888086425-d81bb19240f5?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center"></div>
+            <div class="absolute inset-0 bg-gradient-to-l from-brand-navy via-brand-navy/90 to-transparent"></div>
+            
+            <div class="container mx-auto px-6 max-w-7xl relative z-10 flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-3/5">
+                    <div class="inline-block bg-brand-gold/20 border border-brand-gold text-brand-gold font-bold px-4 py-1 rounded-full text-sm mb-6">
+                        <i class="fa-solid fa-shield-halved ml-2"></i> מומחה לניהול מערכי בקרת עובדים ואבטחה
+                    </div>
+                    <h2 class="text-5xl md:text-6xl font-black mb-6 leading-tight">
+                        שליטה מוחלטת.<br>אפס הפתעות באתרי עבודה.
+                    </h2>
+                    <p class="text-lg text-gray-300 mb-10 max-w-2xl leading-relaxed">
+                        מעטפת מקצועית לחברות בנייה, תשתית ומפעלים. ייעוץ אסטרטגי, ביצוע ביקורות פתע בשטח, הקמת נהלי בטיחות ואבטחה, והטמעת מערכות טכנולוגיות מתקדמות לניהול כוח אדם וקבלני משנה.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#contact" class="bg-brand-gold hover:bg-yellow-600 text-brand-navy font-black px-8 py-4 rounded-lg shadow-lg transition-colors">
+                            תיאום פגישת ייעוץ
+                        </a>
+                        <button onclick="loginToPortal()" class="bg-white/10 hover:bg-white/20 border border-white/30 font-bold px-8 py-4 rounded-lg transition-colors">
+                            הדגמת מערכת לקוחות
+                        </button>
+                    </div>
+                </div>
+                <div class="md:w-2/5 hidden md:block">
+                    <div class="relative">
+                        <div class="w-72 h-72 rounded-full border-4 border-brand-gold overflow-hidden mx-auto shadow-2xl relative z-10 bg-white">
+                            <!-- Placeholder for Oren's Picture -->
+                            <img src="https://ui-avatars.com/api/?name=Oren+Farag&background=f8fafc&color=d97706&size=512" alt="אורן פראג" class="w-full h-full object-cover">
+                        </div>
+                        <div class="absolute -bottom-4 -right-4 w-full h-full bg-brand-gold rounded-full opacity-20 blur-xl"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="py-24 bg-white">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <div class="text-center mb-16">
+                    <h3 class="text-brand-gold font-bold text-sm mb-2">פתרונות ליבה</h3>
+                    <h2 class="text-4xl font-black text-brand-navy">אסטרטגיה פוגשת שטח</h2>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Service 1 -->
+                    <div class="p-8 rounded-2xl border border-gray-100 shadow-lg hover:shadow-xl transition-all bg-gray-50 group">
+                        <div class="w-16 h-16 bg-brand-navy rounded-xl flex items-center justify-center text-brand-gold text-3xl mb-6 group-hover:bg-brand-gold group-hover:text-white transition-colors">
+                            <i class="fa-solid fa-clipboard-check"></i>
+                        </div>
+                        <h3 class="text-xl font-black mb-3">בקרת אתרי עבודה</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">ביצוע ביקורות פתע, אכיפת נהלים, פיקוח על רכבים וציוד, ומניעת חריגות באתרי בנייה ותשתיות מורכבים.</p>
+                    </div>
+                    <!-- Service 2 -->
+                    <div class="p-8 rounded-2xl border border-gray-100 shadow-lg hover:shadow-xl transition-all bg-gray-50 group border-b-4 border-b-brand-gold">
+                        <div class="w-16 h-16 bg-brand-navy rounded-xl flex items-center justify-center text-brand-gold text-3xl mb-6 group-hover:bg-brand-gold group-hover:text-white transition-colors">
+                            <i class="fa-solid fa-users-viewfinder"></i>
+                        </div>
+                        <h3 class="text-xl font-black mb-3">ניהול ובקרת כ"א</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">קליטת עובדים וקבלני משנה, בדיקות רקע, הדרכות סודיות ונוהלי התנהגות, ווידוא תוקף אישורים מקצועיים.</p>
+                    </div>
+                    <!-- Service 3 -->
+                    <div class="p-8 rounded-2xl border border-gray-100 shadow-lg hover:shadow-xl transition-all bg-gray-50 group">
+                        <div class="w-16 h-16 bg-brand-navy rounded-xl flex items-center justify-center text-brand-gold text-3xl mb-6 group-hover:bg-brand-gold group-hover:text-white transition-colors">
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+                        </div>
+                        <h3 class="text-xl font-black mb-3">הטמעת מערכות דיגיטליות</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">העברת הלקוח לעבודה מבוססת תוכנה. הטמעת דשבורדים לניהול ציות, חתימות דיגיטליות ומערכות דיווח חכמות מהשטח.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech/System Teaser -->
+        <section id="tech" class="py-20 bg-brand-light border-t border-gray-200">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <div class="bg-brand-navy rounded-3xl p-10 flex flex-col md:flex-row items-center justify-between shadow-2xl relative overflow-hidden">
+                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+                    <div class="md:w-2/3 relative z-10 text-white mb-8 md:mb-0 pr-8 border-r-4 border-brand-gold">
+                        <h2 class="text-3xl font-black mb-4">מערכת הניהול הדיגיטלית ללקוחות</h2>
+                        <p class="text-gray-300 mb-4 text-sm leading-relaxed">
+                            כחלק משירותי הייעוץ, לקוחותיו של אורן פראג' נהנים מגישה לפורטל ארגוני סגור. המערכת מחליפה את הניירת, מייצרת התראות אוטומטיות על פקיעת אישורים, ומאפשרת ביצוע ביקורות מהירות בשטח - כולל צילום עובדים מהנייד וחתימה דיגיטלית מיידית.
+                        </p>
+                        <p class="text-brand-gold font-bold text-sm"><i class="fa-solid fa-check"></i> כלי עזר חובה לעמידה בביקורות ובתקנים ממשלתיים.</p>
+                    </div>
+                    <div class="md:w-1/3 relative z-10 text-center">
+                        <button onclick="loginToPortal()" class="bg-white text-brand-navy font-black text-lg px-8 py-4 rounded-xl shadow-lg hover:bg-gray-100 hover:scale-105 transition-all">
+                            היכנס להדגמה <i class="fa-solid fa-arrow-left ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-gray-900 text-gray-400 py-8 text-center text-sm border-t-4 border-brand-gold">
+            <p>&copy; 2026 אורן פראג' - ייעוץ, ביקורת וניהול משברים. כל הזכויות שמורות.</p>
+        </footer>
+    </div>
+
+    <!-- ==========================================
+         VIEW 2: THE PORTAL / SYSTEM (SECURE AREA)
+         ========================================== -->
+    <div id="view-portal" class="view-section">
+        <div class="portal-layout">
+            
+            <aside class="w-64 bg-brand-navy text-white flex-shrink-0 flex flex-col hidden md:flex border-l border-gray-800 no-print">
+                <div class="p-6 border-b border-gray-800">
+                    <div class="flex items-center gap-3 text-brand-gold mb-1">
+                        <i class="fa-solid fa-shield-halved text-2xl"></i>
+                        <h2 class="font-black text-lg">SystemControl</h2>
+                    </div>
+                    <p class="text-[0.65rem] text-gray-400">Powered by Oren Farag Consulting</p>
+                </div>
+                
+                <div class="bg-gray-800 p-4 mb-2">
+                    <p class="text-xs text-gray-400 mb-1">לקוח מחובר:</p>
+                    <p class="font-bold text-sm text-white">טופ הנגב פרויקטים בע"מ</p>
+                </div>
+
+                <nav class="flex-1 overflow-y-auto py-2">
+                    <ul class="space-y-1">
+                        <li><a href="#" class="nav-btn flex items-center px-6 py-3 text-brand-gold bg-white/5 border-r-4 border-brand-gold font-bold transition-colors" onclick="switchPortalTab(event, 'dashboard')"><i class="fa-solid fa-chart-pie w-6"></i> דשבורד בקרות</a></li>
+                        <li><a href="#" class="nav-btn flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors" onclick="switchPortalTab(event, 'forms')"><i class="fa-solid fa-clipboard-list w-6"></i> ביצוע מבדק בשטח</a></li>
+                        <li><a href="#" class="nav-btn flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"><i class="fa-solid fa-users w-6"></i> מאגר עובדים (כ"א)</a></li>
+                        <li><a href="#" class="nav-btn flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"><i class="fa-solid fa-file-pdf w-6"></i> ארכיון דוחות</a></li>
+                    </ul>
+                </nav>
+                
+                <div class="p-4 border-t border-gray-800">
+                    <button onclick="logoutFromPortal()" class="w-full flex items-center justify-center gap-2 text-sm text-gray-400 hover:text-white">
+                        <i class="fa-solid fa-right-from-bracket"></i> התנתק מהמערכת
+                    </button>
+                </div>
+            </aside>
+
+            <main class="flex-1 flex flex-col overflow-hidden bg-brand-light relative">
+                
+                <!-- Portal Header -->
+                <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 z-10 border-b border-gray-200 no-print">
+                    <div class="flex items-center gap-4">
+                        <button class="md:hidden text-gray-500 hover:text-brand-navy"><i class="fa-solid fa-bars text-xl"></i></button>
+                        <h2 class="font-bold text-xl text-brand-navy">מערכת בקרת אתרי עבודה וכשירות עובדים</h2>
+                    </div>
+                    
+                    <div class="flex items-center gap-4">
+                        <button onclick="showCustomToast('דיווח חירום נשלח', 'אורן פראג ומנהלי טופ הנגב עודכנו באופן מיידי במערכת.')" class="bg-red-100 hover:bg-red-200 text-security-red px-3 py-1.5 rounded-lg text-sm font-bold shadow-sm transition-colors border border-red-200 flex items-center animate-pulse">
+                            <i class="fa-solid fa-triangle-exclamation ml-2"></i> עצור עבודה / חירום
+                        </button>
+                        <div class="w-8 h-8 rounded-full bg-brand-navy text-white flex items-center justify-center font-bold text-xs">ט"ה</div>
+                    </div>
+                </header>
+
+                <!-- Scrollable Container -->
+                <div class="flex-1 overflow-y-auto p-6 md:p-8 relative">
+                    
+                    <!-- ==================================
+                         PORTAL TAB: DASHBOARD
+                         ================================== -->
+                    <div id="portal-tab-dashboard" class="space-y-6">
+                        
+                        <!-- Top Banner -->
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col md:flex-row justify-between items-center border-r-4 border-r-brand-gold">
+                            <div>
+                                <h3 class="font-black text-xl text-brand-navy mb-1">מדד ציות וביקורת עובדים (Compliance Score)</h3>
+                                <p class="text-sm text-gray-500">משוקלל על בסיס 45 ביקורות פתע מהחודש האחרון באתרי העבודה.</p>
+                            </div>
+                            <div class="flex items-center gap-6 mt-4 md:mt-0">
+                                <div class="text-center">
+                                    <div class="text-3xl font-black text-green-500">88%</div>
+                                    <div class="text-xs font-bold text-gray-400 uppercase">ציון אתר</div>
+                                </div>
+                                <div class="h-10 w-px bg-gray-200"></div>
+                                <button onclick="showCustomToast('תיאום הדרכה', 'נשלחה בקשה לאורן פראג לתיאום הדרכה באתר.')" class="bg-brand-navy hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-lg text-sm transition-colors shadow-md">
+                                    <i class="fa-solid fa-calendar-plus ml-1"></i> הזמן הדרכת מנע
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Employee Matrix Table (The requested core feature) -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <div class="flex justify-between items-center border-b pb-4 mb-4">
+                                <h3 class="font-bold text-gray-800 text-lg flex items-center gap-2">
+                                    <i class="fa-solid fa-users-viewfinder text-brand-gold"></i> מטריצת כשירות עובדים וקבלני משנה
+                                </h3>
+                            </div>
+                            
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-right text-sm whitespace-nowrap">
+                                    <thead>
+                                        <tr class="text-gray-500 border-b bg-gray-50">
+                                            <th class="py-3 px-4 font-bold rounded-tr-lg">שם העובד ותפקיד</th>
+                                            <th class="py-3 px-4 font-bold text-center">אישור רקע בתוקף</th>
+                                            <th class="py-3 px-4 font-bold text-center">תדריך נהלים אחרון</th>
+                                            <th class="py-3 px-4 font-bold text-center">חתימה על הצהרה</th>
+                                            <th class="py-3 px-4 font-bold text-center">ביקורת פתע בשטח</th>
+                                            <th class="py-3 px-4 font-bold text-center rounded-tl-lg">סטטוס כניסה</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                            <td class="py-4 px-4 font-bold text-brand-navy">
+                                                <div class="flex flex-col">
+                                                    <span>מוחמד גנאים</span>
+                                                    <span class="text-xs text-gray-500 font-normal">מפעיל צמ"ה (באגר)</span>
+                                                </div>
+                                            </td>
+                                            <td class="py-4 px-4 text-center"><span class="text-green-600 font-bold bg-green-50 px-2 py-1 rounded">עד 12/2026</span></td>
+                                            <td class="py-4 px-4 text-center text-gray-600">07/06/2026</td>
+                                            <td class="py-4 px-4 text-center text-green-600"><i class="fa-solid fa-file-signature text-lg"></i></td>
+                                            <td class="py-4 px-4 text-center text-gray-600">היום (בוקר)</td>
+                                            <td class="py-4 px-4 text-center"><span class="bg-green-100 text-green-700 px-4 py-1.5 rounded-full font-black text-xs border border-green-200">מורשה כניסה</span></td>
+                                        </tr>
+                                        
+                                        <tr class="border-b border-gray-100 hover:bg-red-50 bg-red-50/30">
+                                            <td class="py-4 px-4 font-bold text-brand-navy">
+                                                <div class="flex flex-col">
+                                                    <span>ישראל כהן</span>
+                                                    <span class="text-xs text-gray-500 font-normal">מנהל עבודה (קבלן משנה)</span>
+                                                </div>
+                                            </td>
+                                            <td class="py-4 px-4 text-center"><span class="text-green-600 font-bold bg-green-50 px-2 py-1 rounded">תקין</span></td>
+                                            <td class="py-4 px-4 text-center"><span class="text-security-red font-bold animate-pulse">פג תוקף!</span></td>
+                                            <td class="py-4 px-4 text-center text-gray-400"><i class="fa-solid fa-xmark text-lg"></i> חסר</td>
+                                            <td class="py-4 px-4 text-center text-gray-600">לפני שבוע</td>
+                                            <td class="py-4 px-4 text-center"><span class="bg-red-100 text-security-red px-4 py-1.5 rounded-full font-black text-xs border border-red-200">מנוע כניסה</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==================================
+                         PORTAL TAB: FORMS LIBRARY
+                         ================================== -->
+                    <div id="portal-tab-forms" class="hidden-section space-y-6">
+                        <div class="flex justify-between items-center border-b pb-4">
+                            <h2 class="text-2xl font-black text-brand-navy">ספריית טפסים ומבדקים (אונליין)</h2>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Form 1 -->
+                            <div onclick="openFormFiller('תדריך וביקורת עובדים ורכבים')" class="bg-white border border-gray-200 rounded-xl p-6 form-card cursor-pointer shadow-sm border-r-4 border-r-brand-gold">
+                                <div class="w-12 h-12 bg-amber-50 text-brand-gold rounded-lg flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-clipboard-user"></i></div>
+                                <h3 class="font-bold text-brand-navy mb-2 text-lg">תדריך וביקורת עובדים ורכבים</h3>
+                                <p class="text-xs text-gray-500 mb-4 line-clamp-2">הטופס המרכזי לאישור קליטת עובד חדש, כולל צילום פנים וחתימה על נהלים מחמירים.</p>
+                                <span class="text-brand-gold font-bold text-sm bg-amber-50 px-3 py-1.5 rounded-full block text-center">פתח טופס למילוי <i class="fa-solid fa-arrow-left ml-1"></i></span>
+                            </div>
+
+                            <!-- Form 2 -->
+                            <div onclick="openFormFiller('נוהל קליטת קבלן משנה')" class="bg-white border border-gray-200 rounded-xl p-6 form-card cursor-pointer shadow-sm">
+                                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-user-plus"></i></div>
+                                <h3 class="font-bold text-brand-navy mb-2 text-lg">נוהל קליטת קבלן משנה</h3>
+                                <p class="text-xs text-gray-500 mb-4 line-clamp-2">רישום פרטי חברה, אישור תנאי סודיות ובקרת עבר תעסוקתי לקבלני תשתית משניים.</p>
+                                <span class="text-blue-600 font-bold text-sm bg-blue-50 px-3 py-1.5 rounded-full block text-center">פתח טופס למילוי <i class="fa-solid fa-arrow-left ml-1"></i></span>
+                            </div>
+
+                            <!-- Form 3 -->
+                            <div onclick="openFormFiller('ביקורת טלפונים ומצלמות בשטח')" class="bg-white border border-gray-200 rounded-xl p-6 form-card cursor-pointer shadow-sm">
+                                <div class="w-12 h-12 bg-gray-100 text-gray-600 rounded-lg flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                                <h3 class="font-bold text-brand-navy mb-2 text-lg">ביקורת טלפונים ומצלמות</h3>
+                                <p class="text-xs text-gray-500 mb-4 line-clamp-2">תיעוד הפקדת מכשירים אלקטרוניים וביקורת פתע לאיסור צילום באתרים רגישים.</p>
+                                <span class="text-gray-600 font-bold text-sm bg-gray-100 px-3 py-1.5 rounded-full block text-center">פתח טופס למילוי <i class="fa-solid fa-arrow-left ml-1"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==================================
+                         PORTAL TAB: ACTIVE FORM FILLER
+                         ================================== -->
+                    <div id="portal-tab-active-form" class="hidden-section pb-20 no-print">
+                        <button onclick="switchPortalTab(event, 'forms')" class="flex items-center text-gray-500 hover:text-brand-navy font-bold mb-6 transition-colors">
+                            <i class="fa-solid fa-arrow-right ml-2"></i> חזור לספריית הטפסים
+                        </button>
+
+                        <div class="bg-white border border-gray-300 rounded-2xl shadow-xl overflow-hidden max-w-4xl mx-auto">
+                            
+                            <!-- Form Header -->
+                            <div class="bg-white p-8 border-b-4 border-brand-gold text-center">
+                                <h2 class="text-3xl font-black text-brand-navy mb-1 underline">טופ הנגב פרויקטים בניין ופיתוח בע"מ</h2>
+                                <h3 id="filler-title" class="text-2xl font-bold text-gray-800 mt-2">תדריך וביקורת עובדים</h3>
+                            </div>
+
+                            <form id="audit-form" onsubmit="generateCertificate(event)" class="p-6 md:p-8">
+                                
+                                <!-- Site Selection -->
+                                <div class="mb-6 bg-gray-50 p-4 border border-gray-200 rounded-lg">
+                                    <label class="block text-sm font-bold text-gray-700 mb-2">בחר אתר עבודה מבוקר:</label>
+                                    <select id="f-site" required class="w-full px-4 py-2 rounded border border-gray-300 outline-none focus:border-brand-gold">
+                                        <option value="" disabled selected>-- בחר מתוך הרשימה --</option>
+                                        <option value="אתר פיתוח שכונת רקפות">אתר פיתוח שכונת רקפות</option>
+                                        <option value="כביש עוקף נתיבי ישראל">כביש עוקף נתיבי ישראל</option>
+                                        <option value="פרויקט רשות ניקוז (ערבה)">פרויקט רשות ניקוז (ערבה)</option>
+                                        <option value="אחר">אתר כללי אחר</option>
+                                    </select>
+                                </div>
+
+                                <!-- Camera Capture Section -->
+                                <div class="mb-8 border border-gray-300 rounded-lg p-4">
+                                    <h4 class="font-bold mb-3 text-brand-navy border-r-4 border-brand-gold pr-2">צילום עובד מבוקר (חובה)</h4>
+                                    <div class="flex flex-col md:flex-row gap-4 items-start">
+                                        <div class="w-full md:w-1/2">
+                                            <video id="camera-stream" autoplay playsinline></video>
+                                            <div class="flex gap-2 mt-2">
+                                                <button type="button" onclick="startCamera()" class="bg-gray-200 text-gray-700 px-3 py-1 rounded text-sm font-bold hover:bg-gray-300"><i class="fa-solid fa-video"></i> הפעל מצלמה</button>
+                                                <button type="button" onclick="takePhoto()" class="bg-brand-gold text-white px-3 py-1 rounded text-sm font-bold hover:bg-yellow-600"><i class="fa-solid fa-camera"></i> צלם פנים</button>
+                                            </div>
+                                        </div>
+                                        <div class="w-full md:w-1/2 flex flex-col items-center justify-center bg-gray-50 border border-gray-200 rounded h-48">
+                                            <canvas id="photo-canvas" class="hidden"></canvas>
+                                            <img id="photo-preview" src="" class="hidden max-h-full rounded" alt="Captured Photo">
+                                            <span id="photo-placeholder" class="text-gray-400 text-sm"><i class="fa-solid fa-image text-3xl mb-2 block text-center"></i>התמונה שצולמה תופיע כאן</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Personal Details Grid -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                                    <div><label class="text-sm font-bold">שם העובד:</label><input type="text" id="f-emp-name" required class="w-full border-b border-gray-400 py-1 outline-none"></div>
+                                    <div><label class="text-sm font-bold">ת.ז:</label><input type="text" id="f-emp-id" required class="w-full border-b border-gray-400 py-1 outline-none"></div>
+                                    <div><label class="text-sm font-bold">תפקיד:</label><input type="text" id="f-role" class="w-full border-b border-gray-400 py-1 outline-none"></div>
+                                    <div><label class="text-sm font-bold">שם המעסיק:</label><input type="text" value="טופ הנגב בע״מ" class="w-full border-b border-gray-400 py-1 outline-none font-bold text-gray-600" readonly></div>
+                                </div>
+
+                                <!-- 9 Rules Check -->
+                                <div class="mb-10 bg-red-50 p-6 rounded-lg border border-red-200">
+                                    <h4 class="font-bold text-lg text-security-red mb-4 underline">תדריך חובה - העובר יענש בחומרה:</h4>
+                                    <ol class="list-decimal list-inside space-y-2 text-sm font-bold text-gray-800 pr-2">
+                                        <li>איסור מוחלט על צילום מכל מכשיר באתר.</li>
+                                        <li>יש להישמע להוראות מנהל העבודה ולנהוג בהתאם להנחיות.</li>
+                                        <li>אסור להסתובב באתרים ללא מלווה מורשה.</li>
+                                        <li>אין לקחת שום ציוד ללא אישור מפורש.</li>
+                                        <li>במקרה אירוע חריג או סכנה יש להישמע להוראות ולדווח מיידית.</li>
+                                        <li>איסור הגעה לאתר עם נשק אישי.</li>
+                                        <li>יש לשים לב לחפצים חשודים ולדווח.</li>
+                                        <li>חל איסור על יצירת קשרים אישיים לא מורשים.</li>
+                                        <li>חל איסור מוחלט להטריד מכל מין שהוא. החוק ימוצה.</li>
+                                    </ol>
+                                </div>
+
+                                <!-- Signature Pad -->
+                                <div class="mb-8">
+                                    <h4 class="font-bold mb-3 text-brand-navy border-r-4 border-brand-gold pr-2">חתימת העובד (ידנית)</h4>
+                                    <p class="text-xs text-gray-500 mb-2">אני מאשר שקראתי, הבנתי וצולמתי. חתום בתוך הריבוע באמצעות העכבר או האצבע:</p>
+                                    <canvas id="signature-pad" width="400" height="150" class="w-full max-w-md bg-white"></canvas>
+                                    <div class="mt-2">
+                                        <button type="button" onclick="clearSignature()" class="text-xs text-security-red font-bold hover:underline"><i class="fa-solid fa-eraser"></i> נקה חתימה</button>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="w-full bg-brand-navy hover:bg-gray-800 text-white font-black text-xl py-5 rounded-xl shadow-xl transition-all border-2 border-gray-700">
+                                    אשר, חתום והפק תעודה רשמית
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- ==================================
+                         PORTAL TAB: PRINT CERTIFICATE
+                         ================================== -->
+                    <div id="view-portal-certificate" class="hidden-section pb-20">
+                        <div class="flex justify-between items-center mb-6 no-print">
+                            <button onclick="switchPortalTab(event, 'forms')" class="text-gray-500 hover:text-brand-navy font-bold transition-colors">
+                                <i class="fa-solid fa-arrow-right ml-2"></i> חזור למערכת
+                            </button>
+                            <div class="flex gap-4">
+                                <button onclick="window.print()" class="bg-gray-800 text-white px-6 py-2 rounded-lg font-bold shadow-md flex items-center gap-2">
+                                    <i class="fa-solid fa-print"></i> הדפס מסמך
+                                </button>
+                                <button onclick="shareWhatsApp()" class="bg-green-500 text-white px-6 py-2 rounded-lg font-bold shadow-md flex items-center gap-2">
+                                    <i class="fa-brands fa-whatsapp text-xl"></i> שתף בוואטסאפ
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- The Document -->
+                        <div class="bg-white border-2 border-gray-800 rounded-lg shadow-xl p-10 max-w-3xl mx-auto relative print-border min-h-[800px]">
+                            <!-- Header -->
+                            <div class="border-b-4 border-brand-navy pb-4 mb-8 text-center">
+                                <h1 class="text-3xl font-black text-brand-navy underline mb-1">טופ הנגב פרויקטים בניין ופיתוח בע"מ</h1>
+                                <h2 id="cert-title" class="text-xl font-bold text-gray-700">אישור תדריך וביקורת נהלים</h2>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="flex flex-col md:flex-row gap-8 mb-8">
+                                <div class="flex-1">
+                                    <p class="mb-4">הרינו לאשר כי בתאריך <strong id="cert-date"></strong> בוצעה קליטה, ביקורת ותדריך נהלים לעובד באתר <strong id="cert-site"></strong>.</p>
+                                    <ul class="space-y-3 bg-gray-50 p-4 border border-gray-300 rounded text-sm font-bold">
+                                        <li>שם העובד: <span id="cert-emp-name" class="text-lg text-brand-navy ml-2"></span></li>
+                                        <li>תעודת זהות: <span id="cert-emp-id" class="ml-2 font-normal"></span></li>
+                                        <li>תפקיד: <span id="cert-emp-role" class="ml-2 font-normal"></span></li>
+                                    </ul>
+                                </div>
+                                <!-- Photo Placeholder -->
+                                <div class="w-32 h-32 border-2 border-gray-400 bg-gray-100 flex items-center justify-center shrink-0">
+                                    <img id="cert-photo" src="" class="max-w-full max-h-full hidden">
+                                </div>
+                            </div>
+
+                            <div class="mb-12">
+                                <p class="text-sm font-bold text-security-red border-r-4 border-security-red pr-3">
+                                    הצהרת העובד: אני מאשר כי קראתי והבנתי את כללי העבודה וההתנהגות. ידוע לי כי איסור הצילום הוא מוחלט, וכי כל חריגה מהוראות הממונה תוביל להרחקה מיידית וסנקציות כספיות ואזרחיות.
+                                </p>
+                            </div>
+
+                            <!-- Signatures -->
+                            <div class="flex justify-between items-end border-t border-gray-300 pt-8 mt-auto relative">
+                                <div class="text-center w-1/3">
+                                    <p class="font-bold mb-2">חתימת העובד</p>
+                                    <img id="cert-sig-image" src="" class="max-h-16 mx-auto mb-1 hidden">
+                                    <div class="w-full border-b border-gray-400"></div>
+                                </div>
+                                
+                                <div class="text-center w-1/3 relative">
+                                    <div class="official-stamp absolute -top-12 -right-4 bg-white/90">
+                                        <div class="text-xs text-center border-b border-red-600 pb-1 mb-1 font-bold">אושר דיגיטלית בפורטל</div>
+                                        <div>אורן פראג'</div>
+                                        <div class="text-xs">מנהל ביקורת וייעוץ</div>
+                                    </div>
+                                    <p class="font-bold mb-2 mt-8">אישור מנהל / בקר</p>
+                                    <div class="font-black text-xl text-brand-navy mb-1">אורן פראג'</div>
+                                    <div class="w-full border-b border-gray-400"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD APP -->
-    <!-- Sidebar -->
-    <aside class="w-64 bg-security-dark text-white flex-shrink-0 flex flex-col hidden md:flex h-full border-l border-gray-800">
-        <div class="p-6 border-b border-gray-800 flex items-center gap-3">
-            <i class="fa-solid fa-shield-halved text-security-red text-2xl"></i>
-            <div>
-                <h2 class="font-black text-lg">SecuPortal</h2>
-                <p class="text-[0.65rem] text-gray-400">Powered by Oren Farag</p>
-            </div>
-        </div>
-        
-        <nav class="flex-1 overflow-y-auto py-4">
-            <ul class="space-y-1">
-                <li><a href="#" class="flex items-center px-6 py-3 bg-security-red/10 text-security-red border-r-4 border-security-red font-bold" onclick="switchTab(event, 'dashboard')"><i class="fa-solid fa-satellite-dish w-6"></i> חמ"ל ביטחון ראשי</a></li>
-                
-                <li class="px-6 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider mt-4">ניהול סיווגים ובקרות</li>
-                <li><a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors" onclick="switchTab(event, 'forms')"><i class="fa-solid fa-clipboard-list w-6"></i> ביצוע ביקורות פתע בשטח</a></li>
-                <li><a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"><i class="fa-solid fa-user-shield w-6"></i> מאגר עובדים ומלמ"ב</a></li>
-                <li><a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"><i class="fa-solid fa-mobile-screen-button w-6"></i> מעקב טלפונים ומצלמות</a></li>
-                
-                <li class="px-6 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider mt-4">בטיחות (בפיתוח)</li>
-                <li><a href="#" class="flex items-center px-6 py-3 text-gray-600 cursor-not-allowed"><i class="fa-solid fa-hard-hat w-6"></i> ניהול בטיחות (בקרוב)</a></li>
-                <li><a href="#" class="flex items-center px-6 py-3 text-gray-600 cursor-not-allowed"><i class="fa-solid fa-kit-medical w-6"></i> תאונות עבודה (בקרוב)</a></li>
-                
-                <li class="px-6 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider mt-4">מנהל ביטחון</li>
-                <li><a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"><i class="fa-solid fa-file-pdf w-6"></i> הפקת דוחות למשרד הביטחון</a></li>
-                <li><a href="#" class="flex items-center px-6 py-3 bg-gradient-to-l from-gray-800 to-transparent text-white border-l-4 border-security-red"><i class="fa-solid fa-envelope w-6 text-security-red"></i> צור קשר עם אורן פראג'</a></li>
-            </ul>
-        </nav>
-        
-        <div class="p-4 border-t border-gray-800 text-xs text-center text-gray-500">
-            תקן אבטחה מחמיר | טופ הנגב
-        </div>
-    </aside>
-
-    <!-- Main Content Area -->
-    <main class="flex-1 flex flex-col h-full overflow-hidden bg-brand-light">
-        
-        <!-- Top Navbar -->
-        <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 z-10 border-b border-gray-200">
-            <div class="flex items-center gap-4">
-                <button class="md:hidden text-gray-500 hover:text-brand-navy"><i class="fa-solid fa-bars text-xl"></i></button>
-                <div>
-                    <h2 class="font-bold text-xl text-brand-navy">בקרת מתקנים רגישים - מלמ"ב</h2>
-                    <p class="text-xs text-security-red font-bold hidden md:block">השעיה הוסרה בתנאי פיקוח צמוד של אורן פראג'</p>
-                </div>
-            </div>
-            
-            <div class="flex items-center gap-6">
-                <!-- Anonymous Reporting Button from Document -->
-                <button onclick="alert('נפתח ערוץ דיווח אנונימי (וואטסאפ/מייל) לדיווח על עבירות ביטחון כנדרש בתוכנית ההבראה סעיף 10.')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center border border-gray-300">
-                    <i class="fa-solid fa-user-secret ml-2 text-gray-500"></i> דיווח אנונימי
-                </button>
-                
-                <div class="relative cursor-pointer">
-                    <i class="fa-regular fa-bell text-xl text-gray-600 hover:text-security-red"></i>
-                    <span class="absolute -top-1 -right-1 bg-security-red text-white text-[0.6rem] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">2</span>
-                </div>
-                
-                <div class="flex items-center gap-2 border-r border-gray-200 pr-4">
-                    <img src="https://ui-avatars.com/api/?name=Top+H&background=111827&color=fff" alt="User" class="w-8 h-8 rounded-full">
-                </div>
-            </div>
-        </header>
-
-        <!-- Scrollable Content -->
-        <div class="flex-1 overflow-y-auto p-6 md:p-8 relative">
-            
-            <!-- Dashboard Section -->
-            <div id="section-dashboard" class="space-y-8">
-                
-                <!-- Security Red Alert / Status -->
-                <div class="bg-gradient-to-r from-security-dark to-gray-800 rounded-xl p-6 text-white shadow-lg flex flex-col md:flex-row items-center justify-between border-r-8 border-security-red relative overflow-hidden">
-                    <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
-                    <div class="mb-4 md:mb-0 relative z-10">
-                        <h3 class="font-black text-xl mb-1 flex items-center">
-                            סטטוס עמידה ביעדי "תוכנית שיפור ביטחונית": 
-                            <span class="text-green-400 mr-2 text-2xl">92% ציות</span>
-                            <i class="fa-solid fa-check-circle text-green-400 ml-2"></i>
-                        </h3>
-                        <p class="text-gray-300 text-sm mt-2">רענון נהלים לעובדים עומד על 100%. אפס אירועי חריגת צילום בחודש האחרון. יש להשלים ביקורות פתע ל-3 צוותים.</p>
-                    </div>
-                    <button class="relative z-10 bg-security-red hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-xl whitespace-nowrap transition-all border border-red-500 flex items-center gap-2">
-                        <i class="fa-solid fa-file-pdf"></i> הפק דוח למשרד הביטחון
-                    </button>
-                </div>
-
-                <!-- KPI Cards (Security Focused) -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 border-b-4 border-b-green-500">
-                        <div class="text-gray-500 text-xs font-bold mb-1">עובדים מאושרים לכניסה לבסיסים</div>
-                        <div class="text-3xl font-black text-brand-navy flex justify-between items-end">
-                            145 <i class="fa-solid fa-id-card text-green-100 text-3xl"></i>
-                        </div>
-                    </div>
-                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 border-b-4 border-b-security-red">
-                        <div class="text-gray-500 text-xs font-bold mb-1">החרמות טלפונים/מצלמות (החודש)</div>
-                        <div class="text-3xl font-black text-brand-navy flex justify-between items-end">
-                            0 <span class="text-sm text-green-500 font-normal">עומד ביעד <i class="fa-solid fa-mobile-screen text-gray-100 text-3xl mr-2"></i></span>
-                        </div>
-                    </div>
-                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 border-b-4 border-b-brand-orange">
-                        <div class="text-gray-500 text-xs font-bold mb-1">סיווג בטחוני פג תוקף / הדרכות חסרות</div>
-                        <div class="text-3xl font-black text-brand-navy flex justify-between items-end">
-                            4 <i class="fa-solid fa-triangle-exclamation text-brand-orange text-3xl opacity-50"></i>
-                        </div>
-                    </div>
-                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 border-b-4 border-b-blue-500">
-                        <div class="text-gray-500 text-xs font-bold mb-1">ביקורות פתע קב"ט שבוצעו בשטח</div>
-                        <div class="text-3xl font-black text-brand-navy flex justify-between items-end">
-                            12 <i class="fa-solid fa-clipboard-check text-blue-100 text-3xl"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- The Core Request: Employee Security Matrix -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mt-6">
-                    <div class="flex justify-between items-center border-b pb-4 mb-4">
-                        <div>
-                            <h3 class="font-bold text-gray-800 text-lg flex items-center gap-2">
-                                <i class="fa-solid fa-users-viewfinder text-security-red"></i> מטריצת כשירות ביטחונית וסיווגים
-                            </h3>
-                            <p class="text-xs text-gray-500 mt-1">מערכת נעילת כניסות. עובד המסומן באדום מנוע מהגעה למחנות צה"ל ומתקנים ביטחוניים.</p>
-                        </div>
-                        <button class="hidden md:flex items-center gap-2 text-sm font-bold bg-gray-100 text-gray-700 px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-200">
-                            <i class="fa-solid fa-filter"></i> סנן עובדים פסולים
-                        </button>
-                    </div>
-                    
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-right text-sm whitespace-nowrap">
-                            <thead>
-                                <tr class="text-gray-500 border-b bg-gray-50">
-                                    <th class="py-3 px-4 font-bold rounded-tr-lg">שם העובד ותפקיד</th>
-                                    <th class="py-3 px-4 font-bold text-center">אישור ביטחוני בתוקף</th>
-                                    <th class="py-3 px-4 font-bold text-center">תדריך ביטחון רבעוני</th>
-                                    <th class="py-3 px-4 font-bold text-center">חתימה על נהלים</th>
-                                    <th class="py-3 px-4 font-bold text-center">ביקורת שטח אחרונה</th>
-                                    <th class="py-3 px-4 font-bold text-center rounded-tl-lg">סטטוס כניסה</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                                    <td class="py-4 px-4 font-bold text-brand-navy">
-                                        <div class="flex flex-col">
-                                            <span>מוחמד גנאים</span>
-                                            <span class="text-xs text-gray-500 font-normal">מפעיל צמ"ה (באגר)</span>
-                                        </div>
-                                    </td>
-                                    <td class="py-4 px-4 text-center">
-                                        <span class="text-green-600 font-bold bg-green-50 px-2 py-1 rounded"><i class="fa-solid fa-check mr-1"></i> מאושר (עד 12/2026)</span>
-                                    </td>
-                                    <td class="py-4 px-4 text-center text-gray-600">07/06/2026</td>
-                                    <td class="py-4 px-4 text-center text-green-600"><i class="fa-solid fa-file-signature text-lg"></i></td>
-                                    <td class="py-4 px-4 text-center text-gray-600">היום (בקרת בוקר)</td>
-                                    <td class="py-4 px-4 text-center">
-                                        <span class="bg-green-100 text-green-700 px-4 py-1.5 rounded-full font-black text-xs border border-green-200 shadow-sm">
-                                            מורשה כניסה
-                                        </span>
-                                    </td>
-                                </tr>
-                                
-                                <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                                    <td class="py-4 px-4 font-bold text-brand-navy">
-                                        <div class="flex flex-col">
-                                            <span>ישראל כהן</span>
-                                            <span class="text-xs text-gray-500 font-normal">מנהל עבודה (קבלן משנה)</span>
-                                        </div>
-                                    </td>
-                                    <td class="py-4 px-4 text-center">
-                                        <span class="text-green-600 font-bold bg-green-50 px-2 py-1 rounded"><i class="fa-solid fa-check mr-1"></i> מאושר משרד הביטחון</span>
-                                    </td>
-                                    <td class="py-4 px-4 text-center">
-                                        <span class="text-security-red font-bold animate-pulse">פג תוקף! (חסרה הדרכה)</span>
-                                    </td>
-                                    <td class="py-4 px-4 text-center text-green-600"><i class="fa-solid fa-file-signature text-lg"></i></td>
-                                    <td class="py-4 px-4 text-center text-gray-600">לפני שבוע</td>
-                                    <td class="py-4 px-4 text-center">
-                                        <span class="bg-red-100 text-security-red px-4 py-1.5 rounded-full font-black text-xs border border-red-200 shadow-sm">
-                                            מנוע כניסה לבסיס
-                                        </span>
-                                    </td>
-                                </tr>
-
-                                <tr class="border-b border-gray-100 hover:bg-red-50 transition-colors bg-red-50/50">
-                                    <td class="py-4 px-4 font-bold text-brand-navy">
-                                        <div class="flex flex-col">
-                                            <span>סאמר אל-טורי</span>
-                                            <span class="text-xs text-gray-500 font-normal">נהג משאית</span>
-                                        </div>
-                                    </td>
-                                    <td class="py-4 px-4 text-center">
-                                        <span class="text-security-red font-bold bg-red-100 px-2 py-1 rounded"><i class="fa-solid fa-xmark mr-1"></i> מושעה מלמ"ב</span>
-                                    </td>
-                                    <td class="py-4 px-4 text-center text-gray-600">10/05/2026</td>
-                                    <td class="py-4 px-4 text-center text-green-600"><i class="fa-solid fa-file-signature text-lg"></i></td>
-                                    <td class="py-4 px-4 text-center">
-                                        <span class="text-security-red font-bold text-xs">נתפס עם סמארטפון באתר!</span>
-                                    </td>
-                                    <td class="py-4 px-4 text-center">
-                                        <button onclick="alert('נשלחה התראה לאורן פראג על מנת לפתוח בחקירת אירוע חריג מול הנהג.')" class="bg-security-dark text-white px-3 py-1.5 rounded text-xs font-bold hover:bg-black transition-colors">
-                                            <i class="fa-solid fa-gavel ml-1"></i> פתח חקירה
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="bg-red-50 p-6 rounded-xl border border-red-200 mt-6">
-                    <h3 class="font-bold text-security-red mb-2"><i class="fa-solid fa-circle-exclamation ml-2"></i> התחייבות הנהלה (סעיף 12 מתוך תוכנית השיפור)</h3>
-                    <p class="text-sm text-red-800">
-                        הנהלת טופ הנגב פרויקטים בע"מ מזכירה לכלל מנהלי העבודה: השעיית החברה ממרשם הספקים בוטלה <strong>רק בזכות התחייבות לביצוע בקרות מחמירות.</strong> כל חריגה או הכנסת טלפון לבסיס תוביל לסנקציות אישיות ולפיטורין מיידיים. חובה למלא טפסים אלו בשגרה!
-                    </p>
-                </div>
-            </div>
-
-            <!-- Forms Library Section (Security Focused) -->
-            <div id="section-forms" class="hidden-section space-y-6">
-                <div class="flex justify-between items-center border-b pb-4">
-                    <div>
-                        <h2 class="text-2xl font-black text-security-dark">מערכת טפסים וביקורות פתע (מלמ"ב)</h2>
-                        <p class="text-sm text-gray-500">יושם והוגדר על ידי אורן פראג' כחלק מתוכנית השיפור הביטחונית למשרד הביטחון.</p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Security Form 1 (Derived perfectly from the new document image) -->
-                    <div onclick="openForm('תדריך וביקורת בנושא ביטחון בעבודה')" class="bg-white border border-gray-300 rounded-xl p-6 form-card relative cursor-pointer group shadow-sm border-r-4 border-r-security-red">
-                        <div class="w-12 h-12 bg-red-50 text-security-red rounded-lg flex items-center justify-center text-xl mb-4 group-hover:bg-security-red group-hover:text-white transition-colors">
-                            <i class="fa-solid fa-clipboard-user"></i>
-                        </div>
-                        <h3 class="font-bold text-security-dark mb-2 text-lg">תדריך וביקורת בטחון (רכבים ועובדים)</h3>
-                        <p class="text-xs text-gray-500 mb-4 line-clamp-3">טופס רשמי לבדיקת פרטי עובד, תקינות ציוד רכב (רישיון, שלדה, ביטוח, צ'קלה) והקראת 9 סעיפי תדריך הביטחון המחמיר למחנות צה"ל.</p>
-                        <button class="text-security-red font-bold text-sm bg-red-50 px-3 py-1.5 rounded-full w-full group-hover:bg-security-red group-hover:text-white transition-colors">פתח למילוי ביקורת <i class="fa-solid fa-arrow-left ml-1"></i></button>
-                    </div>
-
-                    <!-- Security Form 2 -->
-                    <div class="bg-white border border-gray-300 rounded-xl p-6 form-card relative cursor-pointer group shadow-sm">
-                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-xl mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                            <i class="fa-solid fa-user-plus"></i>
-                        </div>
-                        <h3 class="font-bold text-brand-navy mb-2 text-lg">נוהל קליטת עובד (סעיף 3)</h3>
-                        <p class="text-xs text-gray-500 mb-4 line-clamp-3">טופס חתום לקליטה: צילום ת.ז, בדיקת עבר, חתימה על הצהרת סודיות והדרכת ביטחון ראשונית. מועבר ישירות לאורן פראג'.</p>
-                        <button class="text-blue-600 font-bold text-sm bg-blue-50 px-3 py-1.5 rounded-full w-full group-hover:bg-blue-600 group-hover:text-white transition-colors">התחל תהליך קליטה <i class="fa-solid fa-arrow-left ml-1"></i></button>
-                    </div>
-
-                    <!-- Security Form 3 -->
-                    <div class="bg-white border border-gray-300 rounded-xl p-6 form-card relative cursor-pointer group shadow-sm">
-                        <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center text-xl mb-4 group-hover:bg-amber-600 group-hover:text-white transition-colors">
-                            <i class="fa-solid fa-mobile-screen-button"></i>
-                        </div>
-                        <h3 class="font-bold text-brand-navy mb-2 text-lg">נוהל טלפונים ומצלמות (סעיף 5)</h3>
-                        <p class="text-xs text-gray-500 mb-4 line-clamp-3">תיעוד הפקדת טלפונים של צוותים לפני כניסה לבסיס, רישום ציוד אלקטרוני, וווידוא איסור הכנסת מצלמות.</p>
-                        <button class="text-amber-600 font-bold text-sm bg-amber-50 px-3 py-1.5 rounded-full w-full group-hover:bg-amber-600 group-hover:text-white transition-colors">בקרת טלפונים <i class="fa-solid fa-arrow-left ml-1"></i></button>
-                    </div>
-                    
-                    <!-- Safety Empty Form (As requested - Safety left empty for now) -->
-                    <div class="bg-gray-50 border border-dashed border-gray-300 rounded-xl p-6 form-card relative opacity-60">
-                        <div class="w-12 h-12 bg-gray-200 text-gray-400 rounded-lg flex items-center justify-center text-xl mb-4">
-                            <i class="fa-solid fa-hard-hat"></i>
-                        </div>
-                        <h3 class="font-bold text-gray-600 mb-2 text-lg">מבדק בטיחות (בקרוב)</h3>
-                        <p class="text-xs text-gray-400 mb-4 line-clamp-3">מודול בטיחות עבודה מתוכנן לעלייה בשלב ב' של המערכת. כרגע המיקוד הינו בכשירות ביטחונית וסיווגים.</p>
-                        <button disabled class="text-gray-400 font-bold text-sm cursor-not-allowed">בפיתוח עתידי</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VIEW 3: ACTIVE FORM (The actual filling interface matching exactly the image provided) -->
-            <div id="view-active-form" class="hidden-section pb-20">
-                <button onclick="switchTab(event, 'forms')" class="flex items-center text-gray-500 hover:text-security-dark font-bold mb-6 transition-colors no-print">
-                    <i class="fa-solid fa-arrow-right ml-2"></i> חזור לספריית הטפסים
-                </button>
-
-                <div class="bg-white border border-gray-300 rounded-2xl shadow-xl overflow-hidden max-w-4xl mx-auto print-border">
-                    
-                    <!-- Form Header mirroring the physical document exactly -->
-                    <div class="bg-white p-8 border-b-4 border-security-red text-center relative">
-                        <h2 class="text-3xl font-black text-brand-navy mb-1 underline">טופ הנגב פרויקטים בניין ופיתוח בע"מ</h2>
-                        <h3 id="active-form-title" class="text-2xl font-bold text-gray-800 mt-2">תדריך וביקורת בנושא ביטחון בעבודה</h3>
-                    </div>
-
-                    <form id="audit-form" onsubmit="submitAndGenerate(event)" class="p-8 bg-white">
-                        
-                        <!-- Top Details Grid (From Document: תאריך, ת"ז, שם עובד, אתר העבודה, וכו') -->
-                        <div class="border border-gray-400 mb-8">
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-0 border-b border-gray-400">
-                                <div class="bg-gray-100 p-2 text-center text-sm font-bold border-l border-gray-400">שם העובד</div>
-                                <div class="bg-gray-100 p-2 text-center text-sm font-bold border-l border-gray-400">ת"ז</div>
-                                <div class="bg-gray-100 p-2 text-center text-sm font-bold border-l border-gray-400">תאריך</div>
-                                <div class="bg-gray-100 p-2 text-center text-sm font-bold">אתר העבודה</div>
-                            </div>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-0 border-b border-gray-400">
-                                <div class="p-2 border-l border-gray-400"><input type="text" id="f-emp-name" placeholder="שם העובד" required class="w-full text-center outline-none bg-transparent"></div>
-                                <div class="p-2 border-l border-gray-400"><input type="text" id="f-emp-id" placeholder="מספר ת.ז" required class="w-full text-center outline-none bg-transparent"></div>
-                                <div class="p-2 border-l border-gray-400"><input type="date" id="f-date" required class="w-full text-center outline-none bg-transparent"></div>
-                                <div class="p-2"><input type="text" id="f-site" value="שדה תימן" class="w-full text-center outline-none bg-transparent"></div>
-                            </div>
-                            
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-0 border-b border-gray-400">
-                                <div class="bg-gray-100 p-2 text-center text-sm font-bold border-l border-gray-400">שם המעסיק</div>
-                                <div class="bg-gray-100 p-2 text-center text-sm font-bold border-l border-gray-400">תפקיד</div>
-                                <div class="bg-gray-100 p-2 text-center text-sm font-bold border-l border-gray-400">רישיון נהיגה</div>
-                                <div class="bg-gray-100 p-2 text-center text-sm font-bold">דף רכב</div>
-                            </div>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-0">
-                                <div class="p-2 border-l border-gray-400"><input type="text" value="טופ הנגב" readonly class="w-full text-center font-bold outline-none bg-transparent text-gray-600"></div>
-                                <div class="p-2 border-l border-gray-400"><input type="text" placeholder="תפקיד" class="w-full text-center outline-none bg-transparent"></div>
-                                <div class="p-2 border-l border-gray-400 text-center"><input type="checkbox" class="w-5 h-5 accent-security-red" checked></div>
-                                <div class="p-2 text-center"><input type="checkbox" class="w-5 h-5 accent-security-red" checked></div>
-                            </div>
-                        </div>
-
-                        <!-- Vehicle Checks Matrix (Matching document exactly) -->
-                        <div class="border border-gray-400 mb-8 overflow-x-auto">
-                            <table class="w-full text-center border-collapse">
-                                <thead>
-                                    <tr class="bg-gray-100 border-b border-gray-400 text-sm">
-                                        <th class="border-l border-gray-400 p-2 font-bold">סוג הכלי</th>
-                                        <th class="border-l border-gray-400 p-2 font-bold">מ. רישוי</th>
-                                        <th class="border-l border-gray-400 p-2 font-bold">מ. שלדה</th>
-                                        <th class="border-l border-gray-400 p-2 font-bold">רישיון כלי</th>
-                                        <th class="p-2 font-bold">ביטוח</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="border-b border-gray-400">
-                                        <td class="border-l border-gray-400 p-2"><input type="text" value="מרצדס טרקטור" class="w-full text-center outline-none bg-transparent text-sm"></td>
-                                        <td class="border-l border-gray-400 p-2"><input type="text" value="2608829" class="w-full text-center outline-none bg-transparent font-bold tracking-widest text-sm"></td>
-                                        <td class="border-l border-gray-400 p-2 text-center"><input type="checkbox" class="w-5 h-5 accent-security-red" checked></td>
-                                        <td class="border-l border-gray-400 p-2 text-center"><input type="checkbox" class="w-5 h-5 accent-security-red" checked></td>
-                                        <td class="p-2 text-center"><input type="checkbox" class="w-5 h-5 accent-security-red" checked></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <table class="w-full text-center border-collapse">
-                                <thead>
-                                    <tr class="bg-gray-100 border-b border-gray-400 text-sm">
-                                        <th class="border-l border-gray-400 p-2 font-bold w-24">נושא</th>
-                                        <th class="border-l border-gray-400 p-2 font-bold">תקינות הכלי</th>
-                                        <th class="border-l border-gray-400 p-2 font-bold">מזגן</th>
-                                        <th class="border-l border-gray-400 p-2 font-bold">אורות</th>
-                                        <th class="border-l border-gray-400 p-2 font-bold">נעליים ואפודה</th>
-                                        <th class="p-2 font-bold">צ'קלה וצופר אחורי</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="border-b border-gray-400">
-                                        <td class="border-l border-gray-400 bg-gray-50 p-2 text-xs font-bold">תקין?</td>
-                                        <td class="border-l border-gray-400 p-2"><input type="checkbox" class="w-5 h-5 accent-security-red" checked></td>
-                                        <td class="border-l border-gray-400 p-2"><input type="checkbox" class="w-5 h-5 accent-security-red" checked></td>
-                                        <td class="border-l border-gray-400 p-2"><input type="checkbox" class="w-5 h-5 accent-security-red" checked></td>
-                                        <td class="border-l border-gray-400 p-2"><input type="checkbox" class="w-5 h-5 accent-security-red" checked></td>
-                                        <td class="p-2"><input type="checkbox" class="w-5 h-5 accent-security-red" checked></td>
-                                    </tr>
-                                    <tr class="border-b border-gray-400">
-                                        <td class="border-l border-gray-400 bg-gray-50 p-2 text-xs font-bold">נושא</td>
-                                        <td colspan="2" class="border-l border-gray-400 p-2 font-bold text-sm bg-gray-100">תקינות צ'קלה</td>
-                                        <td colspan="2" class="border-l border-gray-400 p-2 font-bold text-sm bg-gray-100">לחץ אוויר צמיגים</td>
-                                        <td class="p-2 font-bold text-sm bg-gray-100">צופר אחורי</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border-l border-gray-400 bg-gray-50 p-2 text-xs font-bold">תקין?</td>
-                                        <td colspan="2" class="border-l border-gray-400 p-2"><input type="checkbox" class="w-5 h-5 accent-security-red" checked></td>
-                                        <td colspan="2" class="border-l border-gray-400 p-2"><input type="checkbox" class="w-5 h-5 accent-security-red" checked></td>
-                                        <td class="p-2"><input type="checkbox" class="w-5 h-5 accent-security-red" checked></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- 9 Security Briefing Rules EXACTLY from document -->
-                        <div class="mb-10">
-                            <h4 class="font-bold text-lg text-black mb-4 underline">תדריך ביטחון:</h4>
-                            <ol class="list-decimal list-inside space-y-3 text-sm text-black font-medium leading-relaxed pr-2">
-                                <li>יש להישמע להוראות מנהל העבודה והש.ג. בבסיס ולנהוג בהתאם להנחיות בבסיס.</li>
-                                <li>חל איסור צילום מכל מכשיר או מצלמה בתוך מחנות צה"ל. העובר על החוק ייענש בחומרה, מסתכן בפיטורים ובקנס של 5,000 ₪.</li>
-                                <li>אסורה הכניסה למבנים ומתקנים בשטח הבסיס שאינם חלק מאתר העבודה המוגדר.</li>
-                                <li>כניסה ויציאה מהבסיס בליווי בלבד, ואין להסתובב בבסיסי צה"ל ללא מלווה צמוד.</li>
-                                <li>בתוך הבסיסים אין לגעת או לקחת שום דבר/ציוד אזרחי או צבאי ללא הנחיה ואישור של מנהל העבודה.</li>
-                                <li>חל איסור להכניס עם נשק לצה"ל ולכן אין להגיע לאתר עם נשק אישי.</li>
-                                <li>כל דבר חריג מחפש חשוד לבעיה או משהו שניצפה חייבים לדווח למנהל העבודה בבסיס במיידי.</li>
-                                <li>חל איסור על יצירת קשרים אישיים עם חיילים/עובדי האתר והבסיס.</li>
-                                <li>חל איסור מוחלט לפנות לחיילים או חיילות בבסיס ובמיוחד אין להטריד מינית אדם מכל מין שהוא!</li>
-                            </ol>
-                        </div>
-
-                        <!-- Signatures for input -->
-                        <div class="flex flex-col gap-6 mb-8 mt-12 no-print">
-                            <div class="flex items-center gap-4 border-b border-gray-300 pb-2">
-                                <span class="w-32 font-bold text-sm">חתימת העובד:</span>
-                                <input type="text" placeholder="הקלד שם לחתימה דיגיטלית" required class="flex-1 outline-none text-brand-navy signature-font text-xl">
-                            </div>
-                            <div class="flex items-center gap-4 border-b border-gray-300 pb-2">
-                                <span class="w-32 font-bold text-sm">אחראי ביטחון:</span>
-                                <input type="text" value="אורן פראג'" readonly class="flex-1 outline-none text-security-red signature-font text-xl">
-                            </div>
-                        </div>
-
-                        <button type="submit" class="no-print w-full bg-security-dark hover:bg-black text-white font-bold text-lg py-5 rounded-xl shadow-2xl transition-all flex justify-center items-center gap-3 border-2 border-gray-700">
-                            חתום והפק אישור רשמי <i class="fa-solid fa-file-signature text-xl"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- VIEW 4: GENERATED CERTIFICATE (For Printing and Sharing) -->
-            <div id="view-print-certificate" class="hidden-section pb-20">
-                <div class="flex justify-between items-center mb-6 no-print">
-                    <button onclick="switchTab(event, 'forms')" class="text-gray-500 hover:text-security-dark font-bold transition-colors">
-                        <i class="fa-solid fa-arrow-right ml-2"></i> חזור
-                    </button>
-                    <div class="flex gap-4">
-                        <button onclick="shareWhatsApp()" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-bold shadow-md flex items-center gap-2 transition-colors">
-                            <i class="fa-brands fa-whatsapp text-xl"></i> שלח בוואטסאפ
-                        </button>
-                        <button onclick="window.print()" class="bg-gray-800 hover:bg-black text-white px-6 py-2 rounded-lg font-bold shadow-md flex items-center gap-2 transition-colors">
-                            <i class="fa-solid fa-print"></i> הדפס / שמוֹר PDF
-                        </button>
-                    </div>
-                </div>
-
-                <div class="bg-white border-2 border-gray-800 rounded-lg shadow-xl p-10 max-w-3xl mx-auto relative overflow-hidden print-border min-h-[800px]">
-                    <!-- Watermark -->
-                    <div class="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none z-0">
-                        <i class="fa-solid fa-shield-halved text-[30rem]"></i>
-                    </div>
-
-                    <!-- Header -->
-                    <div class="border-b-4 border-security-red pb-6 mb-8 text-center relative z-10">
-                        <h1 class="text-3xl font-black text-brand-navy underline mb-2">טופ הנגב פרויקטים בניין ופיתוח בע"מ</h1>
-                        <h2 class="text-xl font-bold text-gray-700">אישור ביצוע ביקורת ותדריך ביטחון</h2>
-                    </div>
-
-                    <!-- Content -->
-                    <div class="relative z-10 space-y-6 text-gray-800">
-                        <p class="text-lg leading-relaxed">
-                            הרינו לאשר בזאת כי בתאריך <strong id="cert-date" class="underline"></strong> בוצעה ביקורת נוהלי ביטחון, בדיקת רכבים ותדריך מלמ"ב מקיף באתר <strong id="cert-site"></strong>.
-                        </p>
-                        
-                        <div class="bg-gray-50 p-6 border border-gray-300 rounded-lg">
-                            <ul class="space-y-3 font-medium">
-                                <li><span class="w-32 inline-block text-gray-500">שם העובד המבוקר:</span> <strong id="cert-emp-name" class="text-brand-navy text-lg"></strong></li>
-                                <li><span class="w-32 inline-block text-gray-500">מספר תעודת זהות:</span> <strong id="cert-emp-id"></strong></li>
-                                <li><span class="w-32 inline-block text-gray-500">חברה מעסיקה:</span> <strong>טופ הנגב</strong></li>
-                            </ul>
-                        </div>
-
-                        <p class="text-sm font-bold text-security-red mt-4 border-r-4 border-security-red pr-3">
-                            העובד נמצא תקין. העובד חתם והוצהר בפניו על איסור צילום, איסור נשיאת נשק, נהלי התנהגות מול חיילים ואיסור כניסה לשטחים מוגבלים בבסיס כנדרש. כלי הרכב נבדק ונמצא תקין (כולל צ'קלה וביטוחים).
-                        </p>
-                    </div>
-
-                    <!-- Signatures and Official Stamp -->
-                    <div class="absolute bottom-10 left-10 right-10 flex justify-between items-end border-t border-gray-300 pt-8 z-10">
-                        <div class="text-center">
-                            <p class="font-bold mb-2">חתימת העובד</p>
-                            <div class="signature-font text-2xl text-gray-700" id="cert-emp-sig"></div>
-                            <div class="w-40 border-b border-gray-400 mt-2"></div>
-                        </div>
-                        
-                        <div class="text-center relative">
-                            <!-- Official CSS Stamp -->
-                            <div class="official-stamp absolute -top-16 -right-8 bg-white/80 backdrop-blur-sm">
-                                <div class="text-xs text-center border-b border-red-600 pb-1 mb-1 font-bold">אושר ונחתם דיגיטלית</div>
-                                <div>אורן פראג'</div>
-                                <div class="text-sm">מנהל ביטחון וייעוץ</div>
-                            </div>
-                            
-                            <p class="font-bold mb-2">מנהל ביטחון</p>
-                            <div class="signature-font text-2xl text-security-red">אורן פראג'</div>
-                            <div class="w-40 border-b border-gray-400 mt-2"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </main>
-
-    <!-- Custom Toast Container -->
+    <!-- Custom Toast Notification Container -->
     <div id="toast-container" class="fixed bottom-5 left-5 z-50 flex flex-col gap-3 no-print"></div>
 
-    <!-- Scripts -->
     <script>
-        // Set current date in the form
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const today = new Date().toISOString().split('T')[0];
-            const dateInput = document.getElementById('f-date');
-            if(dateInput) dateInput.value = today;
-        });
+        /* ==========================================================================
+           Navigation Logic
+           ========================================================================== */
+        function loginToPortal() {
+            document.getElementById('view-landing').classList.remove('active');
+            setTimeout(() => {
+                document.getElementById('view-landing').style.display = 'none';
+                document.getElementById('view-portal').style.display = 'block';
+                setTimeout(() => { document.getElementById('view-portal').classList.add('active'); }, 50);
+                
+                // Set default tab in portal
+                switchPortalTab(null, 'dashboard');
+                showCustomToast('התחברות הצליחה', 'ברוך הבא למערכת הבקרה של אורן פראג.');
+            }, 500);
+        }
 
-        // Login Animation
-        document.getElementById('login-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const overlay = document.getElementById('login-overlay');
-            overlay.style.opacity = '0';
-            setTimeout(() => { overlay.style.display = 'none'; }, 500);
-        });
+        function logoutFromPortal() {
+            document.getElementById('view-portal').classList.remove('active');
+            setTimeout(() => {
+                document.getElementById('view-portal').style.display = 'none';
+                document.getElementById('view-landing').style.display = 'block';
+                setTimeout(() => { document.getElementById('view-landing').classList.add('active'); }, 50);
+            }, 500);
+            
+            // Stop camera if running
+            if(videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+            }
+        }
 
-        // Tab Navigation Logic
-        function switchTab(e, tabId) {
+        function switchPortalTab(e, tabId) {
             if(e) e.preventDefault();
             
-            // Hide all views completely
-            document.getElementById('section-dashboard').style.display = 'none';
-            document.getElementById('section-forms').style.display = 'none';
-            document.getElementById('view-active-form').style.display = 'none';
-            document.getElementById('view-print-certificate').style.display = 'none';
-            
-            // Show requested view
-            if(tabId === 'dashboard') document.getElementById('section-dashboard').style.display = 'block';
-            if(tabId === 'forms') document.getElementById('section-forms').style.display = 'block';
-        }
-        
-        // Ensure only dashboard is visible initially
-        document.getElementById('section-forms').style.display = 'none';
-        document.getElementById('view-active-form').style.display = 'none';
-        document.getElementById('view-print-certificate').style.display = 'none';
+            // UI Button Updates
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-brand-gold', 'bg-white/5', 'border-r-4', 'border-brand-gold');
+                btn.classList.add('text-gray-300');
+            });
+            if(e && e.currentTarget) {
+                e.currentTarget.classList.remove('text-gray-300');
+                e.currentTarget.classList.add('text-brand-gold', 'bg-white/5', 'border-r-4', 'border-brand-gold');
+            }
 
-        // Open actual form interface
-        function openForm(formName) {
-            document.getElementById('active-form-title').innerText = formName;
-            
-            document.getElementById('section-forms').style.display = 'none';
-            document.getElementById('view-active-form').style.display = 'block';
-            
-            // Scroll to top
-            document.getElementById('view-active-form').parentElement.scrollTop = 0;
+            // Hide all tabs
+            ['dashboard', 'forms', 'active-form', 'certificate'].forEach(id => {
+                const el = document.getElementById('portal-tab-' + id) || document.getElementById('view-portal-' + id);
+                if(el) {
+                    el.classList.replace('active', 'hidden-section');
+                    el.style.display = 'none';
+                }
+            });
+
+            // Show selected
+            const targetEl = document.getElementById('portal-tab-' + tabId) || document.getElementById('view-portal-' + tabId);
+            if(targetEl) {
+                targetEl.style.display = 'block';
+                setTimeout(() => targetEl.classList.replace('hidden-section', 'active'), 10);
+            }
         }
 
-        // Generate Certificate Logic
-        function submitAndGenerate(e) {
+        function openFormFiller(title) {
+            document.getElementById('filler-title').innerText = title;
+            document.getElementById('cert-title').innerText = title;
+            
+            // Reset form
+            document.getElementById('audit-form').reset();
+            clearSignature();
+            document.getElementById('photo-preview').classList.add('hidden');
+            document.getElementById('photo-placeholder').style.display = 'block';
+            
+            switchPortalTab(null, 'active-form');
+        }
+
+        /* ==========================================================================
+           Camera Integration Logic
+           ========================================================================== */
+        let videoStream = null;
+        async function startCamera() {
+            try {
+                const video = document.getElementById('camera-stream');
+                videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+                video.srcObject = videoStream;
+                showCustomToast('מצלמה פעילה', 'ניתן לצלם כעת את העובד.');
+            } catch (err) {
+                showCustomToast('שגיאת מצלמה', 'לא ניתן לגשת למצלמה. אנא בדוק הרשאות דפדפן.');
+            }
+        }
+
+        function takePhoto() {
+            const video = document.getElementById('camera-stream');
+            if(!videoStream) {
+                showCustomToast('שגיאה', 'יש להפעיל את המצלמה קודם.');
+                return;
+            }
+            const canvas = document.getElementById('photo-canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            
+            const dataUrl = canvas.toDataURL('image/png');
+            const preview = document.getElementById('photo-preview');
+            preview.src = dataUrl;
+            preview.classList.remove('hidden');
+            document.getElementById('photo-placeholder').style.display = 'none';
+            
+            // Stop stream after capture to save resources
+            videoStream.getTracks().forEach(track => track.stop());
+            videoStream = null;
+        }
+
+        /* ==========================================================================
+           Signature Canvas Logic (Touch & Mouse)
+           ========================================================================== */
+        const sigCanvas = document.getElementById('signature-pad');
+        const ctx = sigCanvas.getContext('2d');
+        let isDrawing = false;
+
+        // Mouse Events
+        sigCanvas.addEventListener('mousedown', (e) => { isDrawing = true; draw(e.offsetX, e.offsetY, false); });
+        sigCanvas.addEventListener('mousemove', (e) => { if(isDrawing) draw(e.offsetX, e.offsetY, true); });
+        sigCanvas.addEventListener('mouseup', () => isDrawing = false);
+        sigCanvas.addEventListener('mouseout', () => isDrawing = false);
+
+        // Touch Events (Mobile)
+        sigCanvas.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Prevent scrolling
+            const touch = e.touches[0];
+            const rect = sigCanvas.getBoundingClientRect();
+            isDrawing = true;
+            draw(touch.clientX - rect.left, touch.clientY - rect.top, false);
+        });
+        sigCanvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if(isDrawing) {
+                const touch = e.touches[0];
+                const rect = sigCanvas.getBoundingClientRect();
+                draw(touch.clientX - rect.left, touch.clientY - rect.top, true);
+            }
+        });
+        sigCanvas.addEventListener('touchend', () => isDrawing = false);
+
+        function draw(x, y, isDown) {
+            if (!isDown) {
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = '#0f172a'; // Navy color
+                ctx.stroke();
+            }
+        }
+
+        function clearSignature() {
+            ctx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+        }
+
+        function isCanvasBlank(canvas) {
+            const blank = document.createElement('canvas');
+            blank.width = canvas.width;
+            blank.height = canvas.height;
+            return canvas.toDataURL() === blank.toDataURL();
+        }
+
+        /* ==========================================================================
+           Form Submission & Certificate Generation
+           ========================================================================== */
+        function generateCertificate(e) {
             e.preventDefault();
             
-            // Get form values
-            const empName = document.getElementById('f-emp-name').value;
-            const empId = document.getElementById('f-emp-id').value;
-            const date = document.getElementById('f-date').value;
-            const site = document.getElementById('f-site').value;
+            // Validation
+            if (isCanvasBlank(sigCanvas)) {
+                showCustomToast('חתימה חסרה', 'חובה לחתום בתוך הריבוע לפני שליחה.');
+                return;
+            }
+            if(document.getElementById('photo-preview').classList.contains('hidden')) {
+                showCustomToast('תמונה חסרה', 'חובה לצלם את העובד לפרופיל.');
+                // We won't block it strictly for demo purposes, but show warning.
+            }
+
+            // Populate Certificate Data
+            document.getElementById('cert-emp-name').innerText = document.getElementById('f-emp-name').value;
+            document.getElementById('cert-emp-id').innerText = document.getElementById('f-emp-id').value;
+            document.getElementById('cert-emp-role').innerText = document.getElementById('f-role').value;
             
-            // Populate Certificate
-            document.getElementById('cert-emp-name').innerText = empName;
-            document.getElementById('cert-emp-id').innerText = empId;
-            document.getElementById('cert-date').innerText = date.split('-').reverse().join('/'); // Format DD/MM/YYYY
-            document.getElementById('cert-site').innerText = site;
-            document.getElementById('cert-emp-sig').innerText = empName; // Simulate signature
+            const siteSelect = document.getElementById('f-site');
+            document.getElementById('cert-site').innerText = siteSelect.options[siteSelect.selectedIndex].text;
             
-            // Switch View
-            document.getElementById('view-active-form').style.display = 'none';
-            document.getElementById('view-print-certificate').style.display = 'block';
-            
-            document.getElementById('view-print-certificate').parentElement.scrollTop = 0;
-            
-            showCustomToast('הטופס נחתם ואושר', 'הופק אישור רשמי מלווה בחותמת מנהל הביטחון.');
+            const today = new Date();
+            document.getElementById('cert-date').innerText = today.toLocaleDateString('he-IL');
+
+            // Transfer Photo
+            const photoSrc = document.getElementById('photo-preview').src;
+            if(photoSrc && !document.getElementById('photo-preview').classList.contains('hidden')) {
+                document.getElementById('cert-photo').src = photoSrc;
+                document.getElementById('cert-photo').classList.remove('hidden');
+            }
+
+            // Transfer Signature
+            document.getElementById('cert-sig-image').src = sigCanvas.toDataURL();
+            document.getElementById('cert-sig-image').classList.remove('hidden');
+
+            // Switch to Certificate View
+            switchPortalTab(null, 'certificate');
+            showCustomToast('הטופס נחתם בהצלחה', 'הופקה תעודה עם החותמת של מנהל הביקורת.');
         }
-        
-        // WhatsApp Share Logic
+
         function shareWhatsApp() {
             const empName = document.getElementById('cert-emp-name').innerText;
             const site = document.getElementById('cert-site').innerText;
+            const title = document.getElementById('cert-title').innerText;
             
-            const message = `*אישור ביצוע ביקורת ביטחון* 🛡️\n\nחברת טופ הנגב בע"מ\n\nהרינו לעדכן כי בוצעה ביקורת פתע ותדריך מלמ"ב בהצלחה לעובד *${empName}* באתר *${site}*.\n\n✅ הרכב נבדק.\n✅ העובד תודרך ואושר.\n\nהטופס המלא נחתם ואושר דיגיטלית ע"י *אורן פראג' - מנהל ביטחון* ושמור במערכת הממוחשבת.`;
-            
-            const encodedMessage = encodeURIComponent(message);
-            window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
+            const message = `*אישור מערכת - אורן פראג'* 🛡️\n\nלקוח: טופ הנגב בע"מ\nהרינו לאשר כי בוצע *${title}* לעובד *${empName}* באתר *${site}*.\n\nהעובד צולם, הודרך, וחתם דיגיטלית.\nמאושר בחותמת מנהל ביקורת.`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
         }
 
-        // Custom Toast Notification Function
+        /* ==========================================================================
+           UI Utilities (Toasts)
+           ========================================================================== */
         function showCustomToast(title, message) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = 'bg-security-dark text-white p-4 rounded-lg shadow-2xl border-l-4 border-security-red flex items-start gap-3 transform translate-y-10 opacity-0 transition-all duration-300 min-w-[300px]';
+            toast.className = 'bg-brand-navy text-white p-4 rounded-lg shadow-2xl border-l-4 border-brand-gold flex items-start gap-3 transform translate-y-10 opacity-0 transition-all duration-300 min-w-[250px]';
             
             toast.innerHTML = `
-                <i class="fa-solid fa-shield-check text-security-red text-xl mt-1"></i>
-                <div>
-                    <h4 class="font-bold text-sm">${title}</h4>
-                    <p class="text-xs text-gray-300 mt-1">${message}</p>
-                </div>
+                <i class="fa-solid fa-bell text-brand-gold mt-1"></i>
+                <div><h4 class="font-bold text-sm">${title}</h4><p class="text-xs text-gray-300 mt-1">${message}</p></div>
             `;
-            
             container.appendChild(toast);
             
-            setTimeout(() => { toast.classList.remove('translate-y-10', 'opacity-0'); }, 10);
-            
+            setTimeout(() => toast.classList.remove('translate-y-10', 'opacity-0'), 10);
             setTimeout(() => {
                 toast.classList.add('opacity-0');
-                setTimeout(() => { if(toast.parentElement) toast.remove(); }, 300);
-            }, 4000);
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
         }
     </script>
 </body>
