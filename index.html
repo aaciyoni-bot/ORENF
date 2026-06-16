@@ -34,10 +34,10 @@
         /* Smooth scrolling */
         html { scroll-behavior: smooth; }
 
-        /* Hide elements initially */
-        .hidden-section { display: none; opacity: 0; transition: opacity 0.5s ease-in-out; }
-        .visible-section { display: block; opacity: 1; }
-        .flex-visible-section { display: flex; opacity: 1; }
+        /* Hide elements initially - FIX: Added !important and pointer-events to prevent invisible overlays blocking clicks */
+        .hidden-section { display: none !important; opacity: 0; pointer-events: none; transition: opacity 0.5s ease-in-out; }
+        .visible-section { display: block !important; opacity: 1; pointer-events: auto; }
+        .flex-visible-section { display: flex !important; opacity: 1; pointer-events: auto; }
 
         /* Marketing Site Hero */
         .hero-gradient {
@@ -64,8 +64,8 @@
         .form-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); border-color: #d97706; }
         
         /* Toast Notification */
-        #toast-container { position: fixed; bottom: 20px; left: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast { background: #1e293b; color: white; padding: 16px 24px; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: flex; items-center; gap: 12px; transform: translateX(-100%); animation: slideIn 0.3s forwards, fadeOut 0.5s 3s forwards; border-right: 4px solid #d97706;}
+        #toast-container { position: fixed; bottom: 20px; left: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { background: #1e293b; color: white; padding: 16px 24px; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 12px; transform: translateX(-100%); animation: slideIn 0.3s forwards, fadeOut 0.5s 3s forwards; border-right: 4px solid #d97706; pointer-events: auto;}
         @keyframes slideIn { to { transform: translateX(0); } }
         @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
 
@@ -302,10 +302,10 @@
             <nav class="flex-1 overflow-y-auto py-4 custom-scrollbar">
                 <ul class="space-y-1">
                     <li class="px-6 py-2 text-[0.65rem] font-bold text-gray-500 uppercase tracking-wider mb-1">ניהול ובקרה</li>
-                    <li><a href="#" onclick="switchTab('dashboard')" class="nav-btn active-nav flex items-center px-6 py-3 text-brand-gold bg-white/5 border-r-4 border-brand-gold transition-colors"><i class="fa-solid fa-chart-pie w-6"></i> לוח בקרה ראשי</a></li>
+                    <li><a href="#" onclick="switchTab(event, 'dashboard')" class="nav-btn active-nav flex items-center px-6 py-3 text-brand-gold bg-white/5 border-r-4 border-brand-gold transition-colors"><i class="fa-solid fa-chart-pie w-6"></i> לוח בקרה ראשי</a></li>
                     
                     <li class="px-6 py-2 text-[0.65rem] font-bold text-gray-500 uppercase tracking-wider mt-4 mb-1">ביצוע ביקורת</li>
-                    <li><a href="#" onclick="switchTab('forms')" class="nav-btn flex items-center px-6 py-3 text-gray-300 hover:text-white hover:bg-white/5 transition-colors"><i class="fa-solid fa-clipboard-list w-6"></i> עריכת מבדקים וטפסים</a></li>
+                    <li><a href="#" onclick="switchTab(event, 'forms')" class="nav-btn flex items-center px-6 py-3 text-gray-300 hover:text-white hover:bg-white/5 transition-colors"><i class="fa-solid fa-clipboard-list w-6"></i> עריכת מבדקים וטפסים</a></li>
                     <li><a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:text-white hover:bg-white/5 transition-colors"><i class="fa-solid fa-triangle-exclamation w-6"></i> ניהול אירועים (CAPA)</a></li>
                     
                     <li class="px-6 py-2 text-[0.65rem] font-bold text-gray-500 uppercase tracking-wider mt-4 mb-1">שירותי ייעוץ - אורן פראג'</li>
@@ -372,7 +372,7 @@
                                 </p>
                             </div>
                         </div>
-                        <button onclick="switchTab('forms')" class="mt-4 md:mt-0 bg-brand-gold hover:bg-yellow-600 text-white font-bold py-2.5 px-6 rounded shadow-md transition-colors whitespace-nowrap text-sm">
+                        <button onclick="switchTab(event, 'forms')" class="mt-4 md:mt-0 bg-brand-gold hover:bg-yellow-600 text-white font-bold py-2.5 px-6 rounded shadow-md transition-colors whitespace-nowrap text-sm">
                             עבור לביצוע מבדק בטיחות
                         </button>
                     </div>
@@ -443,7 +443,7 @@
                                     </div>
                                 </li>
                             </ul>
-                            <button onclick="switchTab('forms')" class="w-full mt-4 bg-gray-50 hover:bg-gray-100 text-brand-dark font-bold py-2 rounded text-sm transition-colors border border-gray-200">
+                            <button onclick="switchTab(event, 'forms')" class="w-full mt-4 bg-gray-50 hover:bg-gray-100 text-brand-dark font-bold py-2 rounded text-sm transition-colors border border-gray-200">
                                 פתח טפסי בדיקה <i class="fa-solid fa-arrow-left ml-1"></i>
                             </button>
                         </div>
@@ -642,35 +642,30 @@
         }
 
         // Portal Tab Navigation
-        function switchTab(tabId) {
+        function switchTab(e, tabId) {
+            if(e) e.preventDefault();
+            
             // Update nav styling
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('text-brand-gold', 'bg-white/5', 'border-r-4', 'border-brand-gold');
                 btn.classList.add('text-gray-300');
             });
-            event.currentTarget.classList.remove('text-gray-300');
-            event.currentTarget.classList.add('text-brand-gold', 'bg-white/5', 'border-r-4', 'border-brand-gold');
+            
+            if(e && e.currentTarget) {
+                e.currentTarget.classList.remove('text-gray-300');
+                e.currentTarget.classList.add('text-brand-gold', 'bg-white/5', 'border-r-4', 'border-brand-gold');
+            }
 
             // Hide all views
             document.getElementById('view-dashboard').classList.replace('visible-section', 'hidden-section');
             document.getElementById('view-forms').classList.replace('visible-section', 'hidden-section');
             
-            // Because of CSS transitions, use timeout to change display
-            setTimeout(() => {
-                document.getElementById('view-dashboard').style.display = 'none';
-                document.getElementById('view-forms').style.display = 'none';
-                
-                const activeView = document.getElementById('view-' + tabId);
-                activeView.style.display = 'block';
-                // Trigger reflow
-                void activeView.offsetWidth;
-                activeView.classList.replace('hidden-section', 'visible-section');
-            }, 10); // Short delay to allow smooth transition (optional)
-            
-            // Immediate change for simplicity in this demo to avoid display:none conflicts
+            // Immediate change for simplicity
             document.getElementById('view-dashboard').style.display = tabId === 'dashboard' ? 'block' : 'none';
             document.getElementById('view-forms').style.display = tabId === 'forms' ? 'block' : 'none';
-            document.getElementById('view-' + tabId).classList.replace('hidden-section', 'visible-section');
+            
+            const activeView = document.getElementById('view-' + tabId);
+            activeView.classList.replace('hidden-section', 'visible-section');
         }
 
         // Chart Rendering (Requires visibility)
