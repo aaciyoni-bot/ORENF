@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אורן פראג' | ייעוץ אסטרטגי, ביקורת ובטיחות</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Heebo', 'sans-serif'], },
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',      // Deep Navy for Authority
+                            gold: '#d97706',      // Gold/Amber for Premium Consulting
+                            light: '#f8fafc',
+                            accent: '#3b82f6'     // Blue for Tech/Software
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #f8fafc; font-family: 'Heebo', sans-serif; overflow-x: hidden; }
+        
+        /* Smooth scrolling */
+        html { scroll-behavior: smooth; }
+
+        /* Hide elements initially */
+        .hidden-section { display: none; opacity: 0; transition: opacity 0.5s ease-in-out; }
+        .visible-section { display: block; opacity: 1; }
+        .flex-visible-section { display: flex; opacity: 1; }
+
+        /* Marketing Site Hero */
+        .hero-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-pattern {
+            position: absolute; inset: 0; opacity: 0.05;
+            background-image: radial-gradient(#ffffff 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Glassmorphism for forms and cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Interactive Form Cards inside Portal */
+        .form-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .form-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); border-color: #d97706; }
+        
+        /* Toast Notification */
+        #toast-container { position: fixed; bottom: 20px; left: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: #1e293b; color: white; padding: 16px 24px; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: flex; items-center; gap: 12px; transform: translateX(-100%); animation: slideIn 0.3s forwards, fadeOut 0.5s 3s forwards; border-right: 4px solid #d97706;}
+        @keyframes slideIn { to { transform: translateX(0); } }
+        @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
+
+        /* Loader */
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #d97706; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; display: none;}
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="text-brand-dark antialiased">
+
+    <!-- ========================================== -->
+    <!-- SECTION 1: PUBLIC MARKETING SITE (OREN FARAG) -->
+    <!-- ========================================== -->
+    <div id="public-site" class="visible-section">
+        
+        <!-- Navbar -->
+        <nav class="bg-white/90 backdrop-blur-md fixed w-full z-50 border-b border-gray-100 transition-all duration-300">
+            <div class="container mx-auto px-6 max-w-7xl h-20 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-brand-dark rounded flex items-center justify-center text-brand-gold font-black text-xl">OF</div>
+                    <div>
+                        <h1 class="font-black text-xl leading-none text-brand-dark tracking-tight">אורן פראג'</h1>
+                        <p class="text-[0.65rem] font-bold text-gray-500 tracking-widest uppercase">Consulting & Audits</p>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex gap-8 font-semibold text-sm">
+                    <a href="#expertise" class="hover:text-brand-gold transition-colors">תחומי מומחיות</a>
+                    <a href="#technology" class="hover:text-brand-gold transition-colors">המערכת שלנו</a>
+                    <a href="#clients" class="hover:text-brand-gold transition-colors">לקוחות</a>
+                </div>
+
+                <div>
+                    <button onclick="showLoginModal()" class="bg-brand-dark hover:bg-gray-800 text-white px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-lg flex items-center gap-2 border border-transparent hover:border-gray-600">
+                        <i class="fa-solid fa-lock text-brand-gold text-xs"></i> כניסת לקוחות / מערכת
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <header class="hero-gradient pt-32 pb-20 lg:pt-48 lg:pb-32 px-6">
+            <div class="hero-pattern"></div>
+            <div class="container mx-auto max-w-7xl relative z-10 flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2 text-white">
+                    <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-3 py-1.5 rounded-full text-xs font-bold text-brand-gold mb-6 backdrop-blur-sm">
+                        <span class="w-2 h-2 rounded-full bg-brand-gold animate-pulse"></span>
+                        הדור הבא של ניהול סיכונים בארגון
+                    </div>
+                    <h2 class="text-4xl lg:text-6xl font-black mb-6 leading-tight">
+                        שליטה מוחלטת בבטיחות, <br>
+                        <span class="text-brand-gold">ביקורת וכוח אדם.</span>
+                    </h2>
+                    <p class="text-gray-300 text-lg mb-8 leading-relaxed max-w-lg font-light">
+                        שירותי ייעוץ אסטרטגיים המגובים במערכת דיגיטלית חכמה. אנו מספקים לחברות תשתית, מפעלים וארגונים את השקט הנפשי שהם צריכים כדי לצמוח ללא חשיפה רגולטורית ומשפטית.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#technology" class="bg-brand-gold hover:bg-yellow-600 text-white font-bold py-3.5 px-8 rounded-lg shadow-lg transition-all">
+                            הכר את המערכת
+                        </a>
+                        <button onclick="showLoginModal()" class="bg-transparent border border-gray-500 hover:border-white text-white font-bold py-3.5 px-8 rounded-lg transition-all flex items-center gap-2">
+                            למסך ההתחברות <i class="fa-solid fa-arrow-left text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="lg:w-1/2 w-full">
+                    <!-- Abstract Dashboard Illustration -->
+                    <div class="bg-brand-dark border border-gray-700 p-2 rounded-xl shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-500">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop" alt="Dashboard" class="rounded-lg opacity-80 mix-blend-luminosity">
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Expertise Section -->
+        <section id="expertise" class="py-24 bg-white">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <div class="text-center mb-16">
+                    <h3 class="text-brand-gold font-bold tracking-wider uppercase text-sm mb-2">תחומי ייעוץ מרכזיים</h3>
+                    <h2 class="text-3xl lg:text-4xl font-black text-brand-dark">מעטפת ביקורת 360 מעלות</h2>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="p-8 rounded-2xl bg-gray-50 border border-gray-100 hover:shadow-xl transition-shadow">
+                        <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                            <i class="fa-solid fa-hard-hat"></i>
+                        </div>
+                        <h3 class="font-bold text-xl mb-3">ניהול בטיחות (HSE)</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">בניית מערכי בטיחות, ביצוע סקרי סיכונים (JSA), כתיבת נהלי עבודה, וביקורות פתע באתרי בנייה ומפעלים למניעת תאונות עבודה.</p>
+                    </div>
+                    <div class="p-8 rounded-2xl bg-gray-50 border border-gray-100 hover:shadow-xl transition-shadow">
+                        <div class="w-14 h-14 bg-red-100 text-red-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h3 class="font-bold text-xl mb-3">אבטחה פיזית ומניעת פחת</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">סקרי אבטחה מקיפים, כתיבת פק"מ שמירה, בקרת מבקרים, ומניעת גניבות ציוד ופחת לוגיסטי באתרי קצה מורכבים.</p>
+                    </div>
+                    <div class="p-8 rounded-2xl bg-gray-50 border border-gray-100 hover:shadow-xl transition-shadow">
+                        <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                            <i class="fa-solid fa-users-viewfinder"></i>
+                        </div>
+                        <h3 class="font-bold text-xl mb-3">ביקורת חוקי עבודה וכ"א</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">מניעת קנסות ותביעות על ידי ביקורת מעמיקה של שעות עבודה ומנוחה, תנאי העסקה, אישורי קליטה וניהול קבלני משנה.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Software Platform -->
+        <section id="technology" class="py-24 bg-gray-50 border-y border-gray-200">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <div class="flex flex-col lg:flex-row items-center gap-16">
+                    <div class="lg:w-1/2">
+                        <h3 class="text-brand-gold font-bold tracking-wider uppercase text-sm mb-2">יתרון טכנולוגי</h3>
+                        <h2 class="text-3xl font-black text-brand-dark mb-6">המומחיות שלנו - במובייל שלכם</h2>
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            לקוחות הייעוץ שלנו מקבלים גישה אקסקלוסיבית למערכת הביקורת החכמה שלנו. במקום ניירות שהולכים לאיבוד, פיתחנו פלטפורמה המאפשרת ניהול שוטף של כל היבטי הבטיחות והאבטחה בארגון.
+                        </p>
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-check text-brand-gold mt-1"></i>
+                                <div><strong class="text-brand-dark block">10+ טפסים דיגיטליים חכמים</strong> סיורי בטיחות, כמעט ונפגע, אישורי עבודה וביקורות.</div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-check text-brand-gold mt-1"></i>
+                                <div><strong class="text-brand-dark block">דשבורד מנהלים והתרעות</strong> זיהוי חריגות בזמן אמת באמצעות מנוע ניתוח חכם.</div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-check text-brand-gold mt-1"></i>
+                                <div><strong class="text-brand-dark block">חתימות מהשטח ואופליין</strong> המערכת עובדת גם באזורים ללא קליטה סלולרית.</div>
+                            </li>
+                        </ul>
+                        <button onclick="showLoginModal()" class="bg-brand-dark text-white px-6 py-3 rounded-lg font-bold hover:bg-gray-800 transition-colors">
+                            התחברות למערכת <i class="fa-solid fa-arrow-left ml-2"></i>
+                        </button>
+                    </div>
+                    <div class="lg:w-1/2 relative">
+                        <!-- Mockup visual -->
+                        <div class="bg-white p-4 rounded-2xl shadow-xl border border-gray-100 relative z-10">
+                            <div class="bg-gray-100 h-8 rounded-t-lg mb-4 flex items-center px-4 gap-2">
+                                <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop" class="rounded w-full opacity-50 grayscale" alt="Software Demo">
+                            <!-- Overlay CTA -->
+                            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                <div class="w-16 h-16 bg-brand-gold text-white rounded-full flex items-center justify-center text-2xl shadow-lg mb-4">
+                                    <i class="fa-solid fa-fingerprint"></i>
+                                </div>
+                                <h4 class="font-black text-xl text-brand-dark bg-white/90 px-4 py-1 rounded">Private Client Area</h4>
+                            </div>
+                        </div>
+                        <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-brand-gold/20 rounded-full blur-2xl -z-10"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Marketing -->
+        <footer class="bg-brand-dark text-gray-400 py-12 text-center text-sm border-t-4 border-brand-gold">
+            <p>כל הזכויות שמורות &copy; 2026 | אורן פראג' - שירותי ייעוץ, אבטחה וביקורת.</p>
+        </footer>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- SECTION 2: LOGIN MODAL (OVERLAY) -->
+    <!-- ========================================== -->
+    <div id="login-modal" class="fixed inset-0 bg-brand-dark/95 backdrop-blur-sm z-[100] hidden-section flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative transform transition-all">
+            <!-- Loading overlay inside modal -->
+            <div id="login-loader" class="absolute inset-0 bg-white/90 z-10 hidden flex-col items-center justify-center">
+                <div class="loader block mb-4"></div>
+                <p class="font-bold text-brand-dark">מאמת הרשאות מול השרת...</p>
+                <p class="text-xs text-gray-500 mt-1">מפעיל סביבת לקוח: טופ הנגב</p>
+            </div>
+
+            <div class="h-2 bg-brand-gold w-full"></div>
+            <div class="p-8">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center text-brand-dark font-black text-2xl">OF</div>
+                    <button onclick="hideLoginModal()" class="text-gray-400 hover:text-gray-700 text-xl"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <h2 class="text-2xl font-black text-brand-dark mb-1">כניסה למערכת הביקורת</h2>
+                <p class="text-sm text-gray-500 mb-8">הזן פרטי גישה שסופקו על ידי הנהלת החברה.</p>
+                
+                <form id="login-form" onsubmit="handleLogin(event)">
+                    <div class="mb-5">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">דוא"ל משתמש (מודגם ללקוח)</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-envelope absolute right-4 top-3.5 text-gray-400"></i>
+                            <input type="email" value="admin@tophanegev.co.il" class="w-full pl-4 pr-12 py-3 rounded-lg border border-gray-300 focus:border-brand-gold focus:ring-2 focus:ring-brand-gold/20 outline-none text-left" dir="ltr" readonly>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">סיסמה</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-lock absolute right-4 top-3.5 text-gray-400"></i>
+                            <input type="password" value="********" class="w-full pl-4 pr-12 py-3 rounded-lg border border-gray-300 focus:border-brand-gold focus:ring-2 focus:ring-brand-gold/20 outline-none text-left" dir="ltr" readonly>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-brand-dark hover:bg-gray-800 text-white font-bold py-3.5 rounded-lg transition-colors flex justify-center items-center gap-2">
+                        התחבר למערכת <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                </form>
+                <div class="mt-6 text-center text-xs text-gray-400 border-t border-gray-100 pt-4">
+                    מערכת מוגנת. סופק ע"י אורן פראג' ייעוץ.
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- SECTION 3: THE CLIENT PORTAL APP (TOP NEGEV VIEW) -->
+    <!-- ========================================== -->
+    <div id="portal-app" class="hidden-section h-screen w-full bg-[#f1f5f9] flex overflow-hidden font-sans">
+        
+        <!-- Sidebar -->
+        <aside class="w-64 bg-brand-dark text-white flex-shrink-0 flex flex-col h-full z-20 shadow-xl relative">
+            <div class="p-6 border-b border-gray-800 flex flex-col gap-2">
+                <div class="flex items-center gap-2 text-brand-gold mb-2">
+                    <i class="fa-solid fa-shield-check text-xl"></i>
+                    <span class="font-black tracking-widest text-xs">O.F. SYSTEM</span>
+                </div>
+                <h2 class="font-bold text-sm text-gray-300">סביבת לקוח מנוהלת:</h2>
+                <div class="bg-white/10 px-3 py-2 rounded text-white font-black text-lg border-l-4 border-brand-gold truncate">
+                    טופ הנגב בע"מ
+                </div>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto py-4 custom-scrollbar">
+                <ul class="space-y-1">
+                    <li class="px-6 py-2 text-[0.65rem] font-bold text-gray-500 uppercase tracking-wider mb-1">ניהול ובקרה</li>
+                    <li><a href="#" onclick="switchTab('dashboard')" class="nav-btn active-nav flex items-center px-6 py-3 text-brand-gold bg-white/5 border-r-4 border-brand-gold transition-colors"><i class="fa-solid fa-chart-pie w-6"></i> לוח בקרה ראשי</a></li>
+                    
+                    <li class="px-6 py-2 text-[0.65rem] font-bold text-gray-500 uppercase tracking-wider mt-4 mb-1">ביצוע ביקורת</li>
+                    <li><a href="#" onclick="switchTab('forms')" class="nav-btn flex items-center px-6 py-3 text-gray-300 hover:text-white hover:bg-white/5 transition-colors"><i class="fa-solid fa-clipboard-list w-6"></i> עריכת מבדקים וטפסים</a></li>
+                    <li><a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:text-white hover:bg-white/5 transition-colors"><i class="fa-solid fa-triangle-exclamation w-6"></i> ניהול אירועים (CAPA)</a></li>
+                    
+                    <li class="px-6 py-2 text-[0.65rem] font-bold text-gray-500 uppercase tracking-wider mt-4 mb-1">שירותי ייעוץ - אורן פראג'</li>
+                    <li><a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:text-white hover:bg-white/5 transition-colors"><i class="fa-solid fa-book-open-reader w-6"></i> ספריית ידע ונהלים</a></li>
+                    <li><a href="#" onclick="showCustomToast('בקשה לפגישה נשלחה', 'אורן יקבל את הבקשה וייצור קשר בהקדם.')" class="flex items-center px-6 py-3 bg-brand-gold/10 text-brand-gold hover:bg-brand-gold/20 transition-colors mt-2 mx-4 rounded"><i class="fa-solid fa-headset w-6"></i> קבע פגישת ייעוץ דחופה</a></li>
+                </ul>
+            </nav>
+            
+            <div class="p-4 border-t border-gray-800 text-xs text-gray-500 flex justify-between items-center bg-[#0a101d]">
+                <button onclick="logout()" class="hover:text-white flex items-center gap-2"><i class="fa-solid fa-arrow-right-from-bracket"></i> התנתק</button>
+                <span>v3.4.1</span>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+            
+            <!-- Top Header -->
+            <header class="h-16 bg-white shadow-sm flex items-center justify-between px-8 z-10 shrink-0">
+                <div class="flex items-center gap-4">
+                    <h2 class="font-bold text-xl text-brand-dark">שלום, הנהלת טופ הנגב</h2>
+                    <span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded">מערכת מחוברת</span>
+                </div>
+                
+                <div class="flex items-center gap-6">
+                    <!-- Feature: Stop Work Authority -->
+                    <button onclick="showCustomToast('התראת חירום נשלחה!', 'עצירת עבודה דווחה בהצלחה לכלל המנהלים ולאורן פראג.')" class="bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 px-4 py-1.5 rounded-md text-sm font-bold transition-colors flex items-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-hand"></i> עצור עבודה (חירום)
+                    </button>
+                    
+                    <div class="relative cursor-pointer text-gray-400 hover:text-brand-dark transition-colors">
+                        <i class="fa-solid fa-bell text-xl"></i>
+                        <span class="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[0.6rem] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-white">3</span>
+                    </div>
+                    
+                    <div class="w-8 h-8 rounded-full bg-brand-dark text-brand-gold flex items-center justify-center font-bold shadow-md border border-brand-gold/50">
+                        TN
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable Content Area -->
+            <div class="flex-1 overflow-y-auto p-8 relative">
+                
+                <!-- VIEW 1: DASHBOARD -->
+                <div id="view-dashboard" class="space-y-6">
+                    
+                    <!-- AI Safety Score Banner (Feature) -->
+                    <div class="bg-gradient-to-l from-brand-dark to-[#1e293b] rounded-2xl p-6 text-white shadow-lg flex flex-col md:flex-row items-center justify-between relative overflow-hidden border border-gray-700">
+                        <div class="absolute right-0 top-0 h-full w-2 bg-brand-gold"></div>
+                        <div class="flex items-center gap-6 relative z-10">
+                            <!-- Circular Progress for AI Score -->
+                            <div class="relative w-20 h-20 flex items-center justify-center bg-gray-800 rounded-full border-4 border-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.3)]">
+                                <span class="font-black text-2xl">78</span>
+                                <span class="absolute bottom-1 text-[0.5rem] text-gray-400">/100</span>
+                            </div>
+                            <div>
+                                <h3 class="font-black text-xl flex items-center gap-2">
+                                    דירוג בטיחות כולל <span class="text-yellow-400 text-sm font-normal px-2 py-0.5 bg-yellow-400/10 rounded">רמת סיכון בינונית</span>
+                                </h3>
+                                <p class="text-gray-300 text-sm mt-1 max-w-xl">
+                                    מערכת ה-AI זיהתה עליה בכמות אירועי "כמעט ונפגע" בסעיף עבודות גובה. 
+                                    <strong class="text-white block mt-1">המלצת יועץ (אורן פראג'): נדרש רענון נהלים דחוף למנהלי העבודה בשטח.</strong>
+                                </p>
+                            </div>
+                        </div>
+                        <button onclick="switchTab('forms')" class="mt-4 md:mt-0 bg-brand-gold hover:bg-yellow-600 text-white font-bold py-2.5 px-6 rounded shadow-md transition-colors whitespace-nowrap text-sm">
+                            עבור לביצוע מבדק בטיחות
+                        </button>
+                    </div>
+
+                    <!-- KPI Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                            <div>
+                                <div class="text-gray-500 text-xs font-bold mb-1">טפסים שמולאו (החודש)</div>
+                                <div class="text-3xl font-black text-brand-dark">142</div>
+                            </div>
+                            <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center text-xl"><i class="fa-solid fa-file-contract"></i></div>
+                        </div>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between border-b-4 border-b-red-500">
+                            <div>
+                                <div class="text-gray-500 text-xs font-bold mb-1">אירועי "כמעט ונפגע"</div>
+                                <div class="text-3xl font-black text-red-600">4</div>
+                            </div>
+                            <div class="w-12 h-12 bg-red-50 text-red-500 rounded-lg flex items-center justify-center text-xl"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        </div>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                            <div>
+                                <div class="text-gray-500 text-xs font-bold mb-1">תוקף הדרכות פג קרוב</div>
+                                <div class="text-3xl font-black text-brand-gold">12</div>
+                            </div>
+                            <div class="w-12 h-12 bg-yellow-50 text-yellow-600 rounded-lg flex items-center justify-center text-xl"><i class="fa-solid fa-graduation-cap"></i></div>
+                        </div>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                            <div>
+                                <div class="text-gray-500 text-xs font-bold mb-1">פעולות מתקנות פתוחות</div>
+                                <div class="text-3xl font-black text-brand-dark">5</div>
+                            </div>
+                            <div class="w-12 h-12 bg-gray-100 text-gray-600 rounded-lg flex items-center justify-center text-xl"><i class="fa-solid fa-wrench"></i></div>
+                        </div>
+                    </div>
+
+                    <!-- Charts & Lists -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Chart area -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 lg:col-span-2">
+                            <h3 class="font-bold text-brand-dark mb-4 border-b pb-2">מגמת ליקויי בטיחות ואבטחה לפי סוג (רבעון אחרון)</h3>
+                            <canvas id="safetyChart" height="100"></canvas>
+                        </div>
+                        
+                        <!-- Tasks -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <h3 class="font-bold text-brand-dark mb-4 border-b pb-2">משימות דחופות למנהל</h3>
+                            <ul class="space-y-4">
+                                <li class="flex items-start gap-3 bg-red-50 p-3 rounded border border-red-100">
+                                    <i class="fa-solid fa-fire-extinguisher text-red-500 mt-1"></i>
+                                    <div>
+                                        <p class="text-sm font-bold text-gray-800">ביקורת כיבוי אש חסרה</p>
+                                        <p class="text-xs text-gray-600 mt-0.5">אתר סלילה: כביש 90 | איחור של יומיים מנהל: שריף</p>
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3 p-3">
+                                    <i class="fa-solid fa-id-card text-brand-gold mt-1"></i>
+                                    <div>
+                                        <p class="text-sm font-bold text-gray-800">חידוש אישור עבודה בגובה</p>
+                                        <p class="text-xs text-gray-500 mt-0.5">ל-4 עובדי קבלן משנה תוקף פג השבוע</p>
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3 p-3">
+                                    <i class="fa-solid fa-video text-blue-500 mt-1"></i>
+                                    <div>
+                                        <p class="text-sm font-bold text-gray-800">בקרת אבטחה שער צפוני</p>
+                                        <p class="text-xs text-gray-500 mt-0.5">חובה לבצע סיור אבטחה פיזי עקב התרעה</p>
+                                    </div>
+                                </li>
+                            </ul>
+                            <button onclick="switchTab('forms')" class="w-full mt-4 bg-gray-50 hover:bg-gray-100 text-brand-dark font-bold py-2 rounded text-sm transition-colors border border-gray-200">
+                                פתח טפסי בדיקה <i class="fa-solid fa-arrow-left ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 2: FORMS LIBRARY (The 10 specified forms) -->
+                <div id="view-forms" class="hidden-section space-y-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 class="text-2xl font-black text-brand-dark">ספריית טפסים ומבדקים חכמים</h2>
+                            <p class="text-sm text-gray-500 mt-1">אופיין והוגדר ע"י אורן פראג'. נתונים נשמרים בענן ומגובים בחתימה דיגיטלית.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        
+                        <!-- Form 1 -->
+                        <div onclick="simulateFormOpen('מבדק בטיחות שוטף (יומי)')" class="bg-white border border-gray-200 rounded-xl p-5 form-card relative">
+                            <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded flex items-center justify-center text-lg mb-3"><i class="fa-solid fa-person-digging"></i></div>
+                            <h3 class="font-bold text-brand-dark mb-1 text-sm">1. מבדק בטיחות שוטף</h3>
+                            <p class="text-xs text-gray-500 mb-3 line-clamp-2">צ'קליסט יומי מקיף למנהל עבודה. ציוד מגן, גידור, פיגומים, סדר וניקיון.</p>
+                            <span class="text-brand-gold font-bold text-xs flex items-center gap-1">פתח למילוי <i class="fa-solid fa-chevron-left text-[0.6rem]"></i></span>
+                        </div>
+
+                        <!-- Form 2 -->
+                        <div onclick="simulateFormOpen('דיווח וחקר כמעט ונפגע')" class="bg-white border border-gray-200 rounded-xl p-5 form-card relative border-l-4 border-l-red-500">
+                            <div class="w-10 h-10 bg-red-50 text-red-600 rounded flex items-center justify-center text-lg mb-3"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                            <h3 class="font-bold text-brand-dark mb-1 text-sm">2. דיווח "כמעט ונפגע"</h3>
+                            <p class="text-xs text-gray-500 mb-3 line-clamp-2">טופס מהיר לתרבות בטיחות מונעת. דיווח מהשטח + הוספת תמונות למניעת אסון.</p>
+                            <span class="text-brand-gold font-bold text-xs flex items-center gap-1">פתח למילוי <i class="fa-solid fa-chevron-left text-[0.6rem]"></i></span>
+                        </div>
+
+                        <!-- Form 3 -->
+                        <div onclick="simulateFormOpen('ביקורת קליטת קבלן/עובד')" class="bg-white border border-gray-200 rounded-xl p-5 form-card relative">
+                            <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded flex items-center justify-center text-lg mb-3"><i class="fa-solid fa-clipboard-user"></i></div>
+                            <h3 class="font-bold text-brand-dark mb-1 text-sm">3. ביקורת קליטת קבלן</h3>
+                            <p class="text-xs text-gray-500 mb-3 line-clamp-2">רשימת תיוג לפני תחילת עבודה: הדרכות, אישורים רפואיים והסמכות (גובה/צמ"ה).</p>
+                            <span class="text-brand-gold font-bold text-xs flex items-center gap-1">פתח למילוי <i class="fa-solid fa-chevron-left text-[0.6rem]"></i></span>
+                        </div>
+
+                        <!-- Form 4 -->
+                        <div onclick="simulateFormOpen('ביקורת אבטחה פיזית')" class="bg-white border border-gray-200 rounded-xl p-5 form-card relative">
+                            <div class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded flex items-center justify-center text-lg mb-3"><i class="fa-solid fa-shield-halved"></i></div>
+                            <h3 class="font-bold text-brand-dark mb-1 text-sm">4. ביקורת אבטחה פיזית</h3>
+                            <p class="text-xs text-gray-500 mb-3 line-clamp-2">מבדק לקב"ט: נעילת שערים, תאורה, תקינות מצלמות ומניעת פחת באתרי קצה.</p>
+                            <span class="text-brand-gold font-bold text-xs flex items-center gap-1">פתח למילוי <i class="fa-solid fa-chevron-left text-[0.6rem]"></i></span>
+                        </div>
+
+                        <!-- Form 5 -->
+                        <div onclick="simulateFormOpen('בקרת תקינות כלי צמ&quot;ה')" class="bg-white border border-gray-200 rounded-xl p-5 form-card relative">
+                            <div class="w-10 h-10 bg-yellow-50 text-yellow-600 rounded flex items-center justify-center text-lg mb-3"><i class="fa-solid fa-truck-monster"></i></div>
+                            <h3 class="font-bold text-brand-dark mb-1 text-sm">5. בקרת תקינות ציוד וצמ"ה</h3>
+                            <p class="text-xs text-gray-500 mb-3 line-clamp-2">בדיקת בוקר יומית למפעילים: בלמים, נזילות, התרעת רוורס ותוקף רישוי הנדסי.</p>
+                            <span class="text-brand-gold font-bold text-xs flex items-center gap-1">פתח למילוי <i class="fa-solid fa-chevron-left text-[0.6rem]"></i></span>
+                        </div>
+
+                        <!-- Form 6 -->
+                        <div onclick="simulateFormOpen('ביקורת שעות עבודה ונוכחות')" class="bg-white border border-gray-200 rounded-xl p-5 form-card relative">
+                            <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded flex items-center justify-center text-lg mb-3"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                            <h3 class="font-bold text-brand-dark mb-1 text-sm">6. ביקורת שעות חוק עבודה</h3>
+                            <p class="text-xs text-gray-500 mb-3 line-clamp-2">מונע קנסות. בודק חריגות בשעות עבודה, מתן זמני מנוחה והימנעות מתשישות.</p>
+                            <span class="text-brand-gold font-bold text-xs flex items-center gap-1">פתח למילוי <i class="fa-solid fa-chevron-left text-[0.6rem]"></i></span>
+                        </div>
+
+                        <!-- Form 7 -->
+                        <div onclick="simulateFormOpen('מבדק מוכנות לחירום ואש')" class="bg-white border border-gray-200 rounded-xl p-5 form-card relative">
+                            <div class="w-10 h-10 bg-orange-50 text-orange-600 rounded flex items-center justify-center text-lg mb-3"><i class="fa-solid fa-fire"></i></div>
+                            <h3 class="font-bold text-brand-dark mb-1 text-sm">7. מבדק מוכנות לחירום</h3>
+                            <p class="text-xs text-gray-500 mb-3 line-clamp-2">בדיקה חודשית למטפים, דרכי מילוט, ערכות עזרה ראשונה שולט ונהלי פינוי.</p>
+                            <span class="text-brand-gold font-bold text-xs flex items-center gap-1">פתח למילוי <i class="fa-solid fa-chevron-left text-[0.6rem]"></i></span>
+                        </div>
+
+                        <!-- Form 8 -->
+                        <div onclick="simulateFormOpen('אישור עבודה בסיכון PTW')" class="bg-white border border-gray-200 rounded-xl p-5 form-card relative">
+                            <div class="w-10 h-10 bg-gray-800 text-white rounded flex items-center justify-center text-lg mb-3"><i class="fa-solid fa-file-signature"></i></div>
+                            <h3 class="font-bold text-brand-dark mb-1 text-sm">8. אישור עבודה בסיכון (PTW)</h3>
+                            <p class="text-xs text-gray-500 mb-3 line-clamp-2">מנגנון חתימות דיגיטלי מתקדם לעבודות אש, מתח גבוה וחלל מוקף לפני התחלה.</p>
+                            <span class="text-brand-gold font-bold text-xs flex items-center gap-1">פתח למילוי <i class="fa-solid fa-chevron-left text-[0.6rem]"></i></span>
+                        </div>
+
+                        <!-- Form 9 -->
+                        <div onclick="simulateFormOpen('ביקורת חומרים מסוכנים וסביבה')" class="bg-white border border-gray-200 rounded-xl p-5 form-card relative">
+                            <div class="w-10 h-10 bg-teal-50 text-teal-600 rounded flex items-center justify-center text-lg mb-3"><i class="fa-solid fa-leaf"></i></div>
+                            <h3 class="font-bold text-brand-dark mb-1 text-sm">9. ביקורת סביבה וחו"מ</h3>
+                            <p class="text-xs text-gray-500 mb-3 line-clamp-2">בדיקת אחסון דלקים, ניהול פסולת בניין, איטום דליפות אקולוגיות למניעת קנסות.</p>
+                            <span class="text-brand-gold font-bold text-xs flex items-center gap-1">פתח למילוי <i class="fa-solid fa-chevron-left text-[0.6rem]"></i></span>
+                        </div>
+
+                        <!-- Form 10 -->
+                        <div onclick="simulateFormOpen('סקר סיכונים מקדים JSA')" class="bg-white border border-gray-200 rounded-xl p-5 form-card relative">
+                            <div class="w-10 h-10 bg-sky-50 text-sky-600 rounded flex items-center justify-center text-lg mb-3"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+                            <h3 class="font-bold text-brand-dark mb-1 text-sm">10. סקר סיכונים (JSA)</h3>
+                            <p class="text-xs text-gray-500 mb-3 line-clamp-2">ניתוח שלבי משימה חדשה, זיהוי סיכונים ואמצעי בקרה נדרשים לפני ביצוע.</p>
+                            <span class="text-brand-gold font-bold text-xs flex items-center gap-1">פתח למילוי <i class="fa-solid fa-chevron-left text-[0.6rem]"></i></span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Custom Toast Container -->
+    <div id="toast-container"></div>
+
+    <script>
+        // System State
+        let isLoggedIn = false;
+        let chartInstance = null;
+
+        // Custom Toast Notification Function (Replaces standard alerts)
+        function showCustomToast(title, message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <i class="fa-solid fa-circle-info text-brand-gold text-xl"></i>
+                <div>
+                    <h4 class="font-bold text-sm">${title}</h4>
+                    <p class="text-xs text-gray-300 mt-1">${message}</p>
+                </div>
+            `;
+            container.appendChild(toast);
+            
+            // Remove after animation completes
+            setTimeout(() => {
+                if(toast.parentElement) {
+                    toast.remove();
+                }
+            }, 3500);
+        }
+
+        // Form simulation
+        function simulateFormOpen(formName) {
+            showCustomToast('פותח טופס', `טוען תבנית: ${formName}... (סימולציה)`);
+        }
+
+        // Login UI Handling
+        function showLoginModal() {
+            const modal = document.getElementById('login-modal');
+            modal.classList.remove('hidden-section');
+            modal.classList.add('flex-visible-section');
+        }
+
+        function hideLoginModal() {
+            const modal = document.getElementById('login-modal');
+            modal.classList.remove('flex-visible-section');
+            modal.classList.add('hidden-section');
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const loader = document.getElementById('login-loader');
+            loader.classList.remove('hidden');
+            loader.classList.add('flex');
+
+            // Simulate server validation delay
+            setTimeout(() => {
+                hideLoginModal();
+                loader.classList.add('hidden');
+                loader.classList.remove('flex');
+                
+                // Hide Public Site, Show Portal
+                document.getElementById('public-site').classList.replace('visible-section', 'hidden-section');
+                
+                // Small delay to allow fade out, then show portal
+                setTimeout(() => {
+                    document.getElementById('public-site').style.display = 'none';
+                    const portal = document.getElementById('portal-app');
+                    portal.classList.remove('hidden-section');
+                    portal.classList.add('flex-visible-section');
+                    
+                    // Render Chart now that container is visible
+                    renderChart();
+                    showCustomToast('התחברות מוצלחת', 'ברוך הבא למערכת הבקרה של טופ הנגב.');
+                }, 300);
+
+            }, 1500);
+        }
+
+        function logout() {
+            // Hide Portal, Show Public Site
+            const portal = document.getElementById('portal-app');
+            portal.classList.remove('flex-visible-section');
+            portal.classList.add('hidden-section');
+            
+            setTimeout(() => {
+                portal.style.display = '';
+                document.getElementById('public-site').style.display = '';
+                document.getElementById('public-site').classList.replace('hidden-section', 'visible-section');
+                if(chartInstance) chartInstance.destroy();
+                showCustomToast('התנתקות', 'יצאת מהמערכת המאובטחת בהצלחה.');
+            }, 500);
+        }
+
+        // Portal Tab Navigation
+        function switchTab(tabId) {
+            // Update nav styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-brand-gold', 'bg-white/5', 'border-r-4', 'border-brand-gold');
+                btn.classList.add('text-gray-300');
+            });
+            event.currentTarget.classList.remove('text-gray-300');
+            event.currentTarget.classList.add('text-brand-gold', 'bg-white/5', 'border-r-4', 'border-brand-gold');
+
+            // Hide all views
+            document.getElementById('view-dashboard').classList.replace('visible-section', 'hidden-section');
+            document.getElementById('view-forms').classList.replace('visible-section', 'hidden-section');
+            
+            // Because of CSS transitions, use timeout to change display
+            setTimeout(() => {
+                document.getElementById('view-dashboard').style.display = 'none';
+                document.getElementById('view-forms').style.display = 'none';
+                
+                const activeView = document.getElementById('view-' + tabId);
+                activeView.style.display = 'block';
+                // Trigger reflow
+                void activeView.offsetWidth;
+                activeView.classList.replace('hidden-section', 'visible-section');
+            }, 10); // Short delay to allow smooth transition (optional)
+            
+            // Immediate change for simplicity in this demo to avoid display:none conflicts
+            document.getElementById('view-dashboard').style.display = tabId === 'dashboard' ? 'block' : 'none';
+            document.getElementById('view-forms').style.display = tabId === 'forms' ? 'block' : 'none';
+            document.getElementById('view-' + tabId).classList.replace('hidden-section', 'visible-section');
+        }
+
+        // Chart Rendering (Requires visibility)
+        function renderChart() {
+            const ctx = document.getElementById('safetyChart');
+            if (!ctx) return;
+            
+            if (chartInstance) chartInstance.destroy();
+
+            chartInstance = new Chart(ctx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['חוסר ציוד מגן (PPE)', 'חריגות שעות מנוחה', 'תעבורה וכלים כבדים', 'אבטחה ושערים', 'עבודה בגובה'],
+                    datasets: [{
+                        label: 'כמות חריגות רבעוניות',
+                        data: [15, 8, 5, 12, 4],
+                        backgroundColor: [
+                            'rgba(15, 23, 42, 0.8)',   // Navy
+                            'rgba(217, 119, 6, 0.8)',  // Gold
+                            'rgba(15, 23, 42, 0.8)',
+                            'rgba(15, 23, 42, 0.8)',
+                            'rgba(239, 68, 68, 0.8)'   // Red for height (danger)
+                        ],
+                        borderWidth: 0,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true, grid: { borderDash: [2, 4], color: '#f1f5f9' } }, x: { grid: { display: false } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
